@@ -1,0 +1,15 @@
+[
+  {
+    "nombre_plato": "Chicharrón Clásico",
+    "ingredientes": [
+      {"nombre": "carne de cerdo", "cantidad": "500g"},
+      {"nombre": "sal", "cantidad": "al gusto"}
+    ],
+    "preparacion": [
+      "Cortar la carne",
+      "Freír con sal hasta dorar"
+    ],
+    "tiempo_estimado": "60 minutos",
+    "ultima_actualizacion": "2025-06-10"
+  }
+]
