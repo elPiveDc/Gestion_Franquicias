@@ -1,7 +1,10 @@
 package main;
 
-import carga.CargaOracleProveedores;
-import carga.CargaPostgreSQLProveedores;
+import cargaOracle.CargaOracleProveedores;
+import cargapgAdmin.CargaPostgreSQLInventario;
+import cargapgAdmin.CargaPostgreSQLProductos;
+import cargapgAdmin.CargaPostgreSQLProveedores;
+import cargapgAdmin.CargaPostgreSQLotesProduccion;
 import cargasMongo.CargaMongoOpiniones;
 import cargasMongo.CargaMongoRecetas;
 import com.mongodb.client.MongoDatabase;
@@ -22,5 +25,22 @@ public class Main {
         
         CargaMongoOpiniones.cargarCSV("src/main/resources/opiniones.csv");
         CargaMongoRecetas.cargarJSON("src/main/resources/recetas.json");
+        
+        /*CargaOracleProveedores.cargarCSV("src/main/resources/proveedores.csv");*/
+        CargaPostgreSQLProveedores.cargarCSV("src/main/resources/proveedores.csv");
+        CargaPostgreSQLProveedores.mostrarProveedores();
+        
+        System.out.println("");
+        System.out.println("Tabla productos");
+        CargaPostgreSQLProductos.cargarCSV("src/main/resources/productos.csv");
+        CargaPostgreSQLProductos.mostrarProductos();
+        
+        System.out.println("");
+          System.out.println("Tabla lotes");
+        CargaPostgreSQLotesProduccion.cargarCSV("src/main/resources/lotes_produccion.csv");
+        
+        System.out.println("");
+        System.out.println("Tabla inventario");
+        CargaPostgreSQLInventario.cargarCSV("src/main/resources/inventario.csv");
     }
 }

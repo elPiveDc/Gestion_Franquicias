@@ -1,0 +1,10 @@
+id_inventario,id_producto,id_lote,cantidad_disponible,ubicacion,fecha_entrada
+1001,1,100,25,Cocina,2025-06-20
+1002,2,101,15,Refrigerador,2025-06-19
+1003,3,103,5,Cocina,2025-06-21
+1004,1,104,10,Almacén Central,2025-06-18
+1005,2,105,20,Refrigerador,2025-06-17
+1006,3,106,8,Cocina,2025-06-20
+1007,1,107,12,Cocina,2025-06-21
+1008,2,108,18,Refrigerador,2025-06-20
+1009,3,109,6,Almacén Central,2025-06-19

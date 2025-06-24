@@ -1,0 +1,10 @@
+id_producto,nombre,tipo,unidad_medida,precio_unitario
+1,Tomate,Ingrediente,kg,3.50
+2,Pollo,Ingrediente,kg,8.90
+3,Lomo Saltado,Plato preparado,porción,18.00
+4,Cebolla,Ingrediente,kg,2.80
+5,Papa Amarilla,Ingrediente,kg,3.20
+6,Ají Amarillo,Ingrediente,kg,4.50
+7,Arroz,Ingrediente,kg,2.00
+8,Causa Limeña,Plato preparado,porción,15.00
+9,Ají de Gallina,Plato preparado,porción,16.50
