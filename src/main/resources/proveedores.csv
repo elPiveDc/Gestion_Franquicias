@@ -1,4 +1,5 @@
-nombre,direccion,telefono
-Proveedor G,Avenida Lima 111,987654321
-Proveedor H,Calle Cusco 4578,987321654
-Proveedor I,Jr. Arequipa 4578,912345678
+
+nombre,direccion,telefono,correo
+Proveedor A,Av. Union 123,987654321,proveedorA@correo.com
+Proveedor B,Calle Cuadrada 456,912345678,proveedorB@correo.com
+
