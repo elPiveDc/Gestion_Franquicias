@@ -1,0 +1,39 @@
+package com.MiNegocio.configuracioncentral.application;
+
+import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
+import com.MiNegocio.configuracioncentral.domain.Franquicia;
+import com.MiNegocio.configuracioncentral.domain.Usuario;
+import com.MiNegocio.configuracioncentral.service.BaseDatosService;
+import com.MiNegocio.configuracioncentral.service.FranquiciaService;
+import com.MiNegocio.configuracioncentral.service.UsuarioService;
+
+import java.util.List;
+
+public class RegistroInicialService {
+
+    private final UsuarioService usuarioService;
+    private final FranquiciaService franquiciaService;
+    private final BaseDatosService baseDatosService;
+
+    public RegistroInicialService(UsuarioService usuarioService,
+                                  FranquiciaService franquiciaService,
+                                  BaseDatosService baseDatosService) {
+        this.usuarioService = usuarioService;
+        this.franquiciaService = franquiciaService;
+        this.baseDatosService = baseDatosService;
+    }
+
+    public void registrarUsuarioYNegocio(Usuario usuario, Franquicia franquicia, List<BaseDatosFranquicia> bases) {
+        usuarioService.registrarUsuario(usuario);
+
+        franquicia.setPropietario(usuario);
+        franquiciaService.registrarFranquicia(usuario.getId(), franquicia);
+
+        for (BaseDatosFranquicia bd : bases) {
+            bd.setId(franquicia.getId());
+            baseDatosService.registrarBaseDatos(franquicia.getId(), bd);
+        }
+
+        System.out.println("✅ Usuario y negocio registrados correctamente.");
+    }
+}
