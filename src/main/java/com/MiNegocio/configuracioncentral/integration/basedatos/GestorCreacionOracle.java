@@ -14,17 +14,37 @@ public class GestorCreacionOracle implements GestorCreacionBD {
         String usuario = bd.getUsuarioBD();
         String password = bd.getPasswordHash();
 
+        // Crear el usuario
         String createUserSQL = "CREATE USER " + usuario + " IDENTIFIED BY " + password;
-        String grantSQL = "GRANT CONNECT, RESOURCE TO " + usuario;
 
-        try (Connection conn = ConexionMultiBDFactory.getConexion("oracle"); 
-             Statement stmt = conn.createStatement()) {
+        // Privilegios básicos
+        String grantBasicSQL = "GRANT CONNECT, RESOURCE TO " + usuario;
+
+        // Privilegios adicionales útiles para desarrollo
+        String[] privilegiosExtras = {
+            "GRANT CREATE SESSION TO " + usuario,
+            "GRANT CREATE TABLE TO " + usuario,
+            "GRANT CREATE VIEW TO " + usuario,
+            "GRANT CREATE PROCEDURE TO " + usuario,
+            "GRANT CREATE SEQUENCE TO " + usuario,
+            "GRANT CREATE TRIGGER TO " + usuario,
+            "GRANT CREATE TYPE TO " + usuario,
+            "GRANT CREATE SYNONYM TO " + usuario,
+            "GRANT UNLIMITED TABLESPACE TO " + usuario
+        };
+
+        try (Connection conn = ConexionMultiBDFactory.getConexion("oracle"); Statement stmt = conn.createStatement()) {
 
             stmt.executeUpdate(createUserSQL);
-            stmt.executeUpdate(grantSQL);
+            stmt.executeUpdate(grantBasicSQL);
+
+            for (String grant : privilegiosExtras) {
+                stmt.executeUpdate(grant);
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException("Error creando usuario Oracle: " + e.getMessage(), e);
         }
     }
+
 }

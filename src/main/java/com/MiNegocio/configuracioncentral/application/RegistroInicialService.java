@@ -34,6 +34,6 @@ public class RegistroInicialService {
             baseDatosService.registrarBaseDatos(franquicia.getId(), bd);
         }
 
-        System.out.println("✅ Usuario y negocio registrados correctamente.");
+        System.out.println("Usuario y negocio registrados correctamente.");
     }
 }
