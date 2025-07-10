@@ -15,8 +15,9 @@ public class GestorObjetosMySQL implements GestorObjetosBD {
     public void crearObjeto(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
         
         String sql = SQLHelper.generarCreateSQL(objeto, bd.getTipo().toString(), bd.getNombreBD());
+        System.out.println("SQL generado para MySQL:\n" + sql);
 
-        try (Connection conn = ConexionBDFactory.getConexion();
+        try (Connection conn = ConexionMultiBDFactory.getConexion(bd);
              Statement stmt = conn.createStatement()) {
 
             stmt.executeUpdate(sql);

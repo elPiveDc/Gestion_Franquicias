@@ -7,4 +7,5 @@ public interface UsuarioRepository {
     void guardar(Usuario usuario);
     Optional<Usuario> buscarPorCorreo(String correo);
     Optional<Usuario> buscarPorId(int id);
+    public Usuario obtenerCreadorDeFranquicia(int idFranquicia);
 }

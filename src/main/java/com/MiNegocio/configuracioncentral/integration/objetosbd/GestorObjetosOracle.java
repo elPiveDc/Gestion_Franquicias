@@ -15,6 +15,7 @@ public class GestorObjetosOracle implements GestorObjetosBD {
     public void crearObjeto(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
         
         String sql = SQLHelper.generarCreateSQL(objeto, bd.getTipo().toString(), bd.getNombreBD());
+        System.out.println("SQL generado para Oracle:\n" + sql);
 
         try (Connection conn = ConexionMultiBDFactory.getConexion(bd);
              Statement stmt = conn.createStatement()) {

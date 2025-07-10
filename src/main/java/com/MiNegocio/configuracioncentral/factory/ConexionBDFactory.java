@@ -48,7 +48,7 @@ public class ConexionBDFactory {
         }
     }
 
-    private ConexionBDFactory() {
+    public ConexionBDFactory() {
         // Evitar instanciación
     }
 

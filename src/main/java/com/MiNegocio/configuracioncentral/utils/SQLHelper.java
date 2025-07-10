@@ -9,50 +9,43 @@ import java.util.Map;
 public class SQLHelper {
 
     public static String generarCreateSQL(ObjetoBDFranquicia objeto, String tipoBD, String nombreBD) throws Exception {
-        switch (objeto.getTipoObjeto().toUpperCase()) {
-            case "TABLA":
-                return generarCreateTableSQL(objeto, tipoBD, nombreBD);
-            default:
-                throw new UnsupportedOperationException("Tipo no soportado: " + objeto.getTipoObjeto());
-        }
+        return switch (tipoBD.toLowerCase()) {
+            case "mysql" ->
+                generarCreateTableMySQL(objeto, nombreBD);
+            case "postgresql" ->
+                generarCreateTablePostgreSQL(objeto);
+            case "oracle" ->
+                generarCreateTableOracle(objeto);
+            default ->
+                throw new UnsupportedOperationException("Tipo de base de datos no soportado: " + tipoBD);
+        };
     }
 
-    public static String generarCreateTableSQL(ObjetoBDFranquicia objeto, String tipoBD, String nombreBD) throws Exception {
+    // ---------- MYSQL ----------
+    private static String generarCreateTableMySQL(ObjetoBDFranquicia objeto, String nombreBD) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> columnas = mapper.readValue(objeto.getColumnas(), List.class);
 
-        boolean usarComillasDobles = tipoBD.equalsIgnoreCase("postgresql");
-        String abrir = usarComillasDobles ? "\"" : "";
-        String cerrar = usarComillasDobles ? "\"" : "";
-
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ");
-
-        // Especificar base de datos si aplica
-        if ("mysql".equalsIgnoreCase(tipoBD) && nombreBD != null && !nombreBD.isBlank()) {
+        if (nombreBD != null && !nombreBD.isBlank()) {
             sb.append(nombreBD).append(".");
         }
-
-        sb.append(abrir).append(objeto.getNombreTabla()).append(cerrar).append(" (\n");
+        sb.append(objeto.getNombreTabla()).append(" (\n");
 
         for (int i = 0; i < columnas.size(); i++) {
             Map<String, String> col = columnas.get(i);
-            String nombreColumna = col.get("nombre");
-            String tipoColumna = mapearTipo(col.get("tipo"), tipoBD);
+            String nombre = col.get("nombre");
+            String tipo = mapearTipo("mysql", col.get("tipo"));
             String restricciones = col.getOrDefault("restricciones", "");
 
-            sb.append("  ")
-                    .append(abrir).append(nombreColumna).append(cerrar).append(" ")
-                    .append(tipoColumna);
-
-            if (!restricciones.isEmpty()) {
+            sb.append("  ").append(nombre).append(" ").append(tipo);
+            if (!restricciones.isBlank()) {
                 sb.append(" ").append(restricciones);
             }
-
             if (i < columnas.size() - 1) {
                 sb.append(",");
             }
-
             sb.append("\n");
         }
 
@@ -60,7 +53,65 @@ public class SQLHelper {
         return sb.toString();
     }
 
-    private static String mapearTipo(String tipo, String bd) {
+    // ---------- POSTGRESQL ----------
+    private static String generarCreateTablePostgreSQL(ObjetoBDFranquicia objeto) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, String>> columnas = mapper.readValue(objeto.getColumnas(), List.class);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TABLE ");
+        sb.append("\"").append(objeto.getNombreTabla()).append("\" (\n");
+
+        for (int i = 0; i < columnas.size(); i++) {
+            Map<String, String> col = columnas.get(i);
+            String nombre = col.get("nombre");
+            String tipo = mapearTipo("postgresql", col.get("tipo"));
+            String restricciones = col.getOrDefault("restricciones", "");
+
+            sb.append("  ").append("\"").append(nombre).append("\" ").append(tipo);
+            if (!restricciones.isBlank()) {
+                sb.append(" ").append(restricciones);
+            }
+            if (i < columnas.size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+
+        sb.append(");");
+        return sb.toString();
+    }
+
+    // ---------- ORACLE ----------
+    private static String generarCreateTableOracle(ObjetoBDFranquicia objeto) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, String>> columnas = mapper.readValue(objeto.getColumnas(), List.class);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TABLE ").append(objeto.getNombreTabla()).append(" (\n");
+
+        for (int i = 0; i < columnas.size(); i++) {
+            Map<String, String> col = columnas.get(i);
+            String nombre = col.get("nombre");
+            String tipo = mapearTipo("oracle", col.get("tipo"));
+            String restricciones = col.getOrDefault("restricciones", "");
+
+            sb.append("  ").append(nombre).append(" ").append(tipo);
+            if (!restricciones.isBlank()) {
+                sb.append(" ").append(restricciones);
+            }
+            if (i < columnas.size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+
+        sb.append(")");
+        return sb.toString();
+    }
+
+    // ---------- MAPEO DE TIPOS ----------
+    private static String mapearTipo(String bd, String tipo) {
         return switch (bd.toLowerCase()) {
             case "mysql" ->
                 switch (tipo.toLowerCase()) {

@@ -76,6 +76,40 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
         return null;
     }
 
+    @Override
+    public boolean existeTablaUsuarios(int idBD) {
+        String sql = "SELECT 1 FROM objetos_bd_franquicia WHERE id_bd = ? AND es_tabla_usuarios = TRUE LIMIT 1";
+
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idBD);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existeTablaUsuariosParaFranquicia(int idFranquicia) {
+        String sql = """
+        SELECT 1 FROM objetos_bd_franquicia ob
+        JOIN bases_datos_franquicia bd ON ob.id_bd = bd.id_bd
+        WHERE bd.id_franquicia = ? AND ob.es_tabla_usuarios = TRUE
+        LIMIT 1
+    """;
+
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idFranquicia);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error verificando si ya existe la tabla usuarios para la franquicia", e);
+        }
+    }
+
     private ObjetoBDFranquicia mapearObjeto(ResultSet rs) throws SQLException {
         ObjetoBDFranquicia obj = new ObjetoBDFranquicia();
         obj.setIdObjeto(rs.getInt("id_objeto"));

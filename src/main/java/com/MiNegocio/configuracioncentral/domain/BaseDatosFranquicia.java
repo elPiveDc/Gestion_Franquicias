@@ -2,7 +2,15 @@ package com.MiNegocio.configuracioncentral.domain;
 
 public class BaseDatosFranquicia {
 
-    private int id;
+    private int id, id_franquicia;
+
+    public int getId_franquicia() {
+        return id_franquicia;
+    }
+
+    public void setId_franquicia(int id_franquicia) {
+        this.id_franquicia = id_franquicia;
+    }
     private String nombreBD;
     private TipoBD tipo;
     private EstadoBD estado;
@@ -13,8 +21,9 @@ public class BaseDatosFranquicia {
     public BaseDatosFranquicia() {
     }
 
-    public BaseDatosFranquicia(int id, String nombreBD, TipoBD tipo, EstadoBD estado, String urlConexion, String usuarioBD, String passwordHash) {
+    public BaseDatosFranquicia(int id, int id_franquicia, String nombreBD, TipoBD tipo, EstadoBD estado, String urlConexion, String usuarioBD, String passwordHash) {
         this.id = id;
+        this.id_franquicia = id_franquicia;
         this.nombreBD = nombreBD;
         this.tipo = tipo;
         this.estado = estado;
@@ -22,6 +31,8 @@ public class BaseDatosFranquicia {
         this.usuarioBD = usuarioBD;
         this.passwordHash = passwordHash;
     }
+
+    
 
     // Getters y setters
     public int getId() {

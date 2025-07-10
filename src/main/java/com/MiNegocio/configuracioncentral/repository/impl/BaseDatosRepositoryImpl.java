@@ -14,11 +14,10 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
 
     @Override
     public void guardar(BaseDatosFranquicia bd) {
-        String sql = "INSERT INTO bases_datos_franquicia(nombre_bd, tipo_bd, estado, url_conexion, usuario_conexion, pass_conexion_hash, id_franquicia) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bases_datos_franquicia(nombre_bd, tipo_bd, estado, url_conexion, usuario_conexion, pass_conexion_hash, id_franquicia) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexionBDFactory.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, bd.getNombreBD());
             ps.setString(2, bd.getTipo().name());
@@ -45,8 +44,7 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
         List<BaseDatosFranquicia> lista = new ArrayList<>();
         String sql = "SELECT * FROM bases_datos_franquicia WHERE id_franquicia = ?";
 
-        try (Connection conn = ConexionBDFactory.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, idFranquicia);
             ResultSet rs = ps.executeQuery();
@@ -64,11 +62,10 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
 
     @Override
     public BaseDatosFranquicia buscarPorId(int id) {
-        
+
         String sql = "SELECT * FROM bases_datos_franquicia WHERE id_bd = ?";
 
-        try (Connection conn = ConexionBDFactory.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -87,6 +84,7 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
     private BaseDatosFranquicia mapear(ResultSet rs) throws SQLException {
         BaseDatosFranquicia bd = new BaseDatosFranquicia();
         bd.setId(rs.getInt("id_bd"));
+        bd.setId_franquicia(rs.getInt("id_franquicia"));
         bd.setNombreBD(rs.getString("nombre_bd"));
         bd.setTipo(TipoBD.valueOf(rs.getString("tipo_bd")));
         bd.setEstado(EstadoBD.valueOf(rs.getString("estado")));
@@ -95,4 +93,41 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
         bd.setPasswordHash(rs.getString("pass_conexion_hash"));
         return bd;
     }
+
+    @Override
+    public List<BaseDatosFranquicia> buscarPorFranquicia(int idFranquicia) {
+        List<BaseDatosFranquicia> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT id_bd, nombre_bd, tipo_bd, estado, url_conexion, usuario_conexion, pass_conexion_hash, id_franquicia
+        FROM bases_datos_franquicia
+        WHERE id_franquicia = ?
+    """;
+
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idFranquicia);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                BaseDatosFranquicia bd = new BaseDatosFranquicia();
+                bd.setId(rs.getInt("id_bd"));
+                bd.setNombreBD(rs.getString("nombre_bd"));
+                bd.setTipo(TipoBD.valueOf(rs.getString("tipo_bd")));
+                bd.setEstado(EstadoBD.valueOf(rs.getString("estado")));
+                bd.setUrlConexion(rs.getString("url_conexion"));
+                bd.setUsuarioBD(rs.getString("usuario_conexion"));
+                bd.setPasswordHash(rs.getString("pass_conexion_hash"));
+                bd.setId_franquicia(rs.getInt("id_franquicia"));
+
+                lista.add(bd);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar BDs por franquicia", e);
+        }
+
+        return lista;
+    }
+
 }

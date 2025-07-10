@@ -7,5 +7,6 @@ public interface BaseDatosRepository {
     void guardar(BaseDatosFranquicia bd);
     List<BaseDatosFranquicia> obtenerPorFranquicia(int idFranquicia);
     BaseDatosFranquicia buscarPorId(int id);
+    List<BaseDatosFranquicia> buscarPorFranquicia(int idFranquicia);
 }
 

@@ -15,6 +15,7 @@ public class GestorObjetosPostgreSQL implements GestorObjetosBD {
     public void crearObjeto(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
 
         String sql = SQLHelper.generarCreateSQL(objeto, bd.getTipo().toString(), bd.getNombreBD());
+        System.out.println("SQL generado para PG:\n" + sql);
 
         try (Connection conn = ConexionMultiBDFactory.getConexion(bd.getTipo().toString(), bd.getUrlConexion()); 
                 Statement stmt = conn.createStatement()) {
