@@ -64,6 +64,7 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
 
     @Override
     public BaseDatosFranquicia buscarPorId(int id) {
+        
         String sql = "SELECT * FROM bases_datos_franquicia WHERE id_bd = ?";
 
         try (Connection conn = ConexionBDFactory.getConexion();

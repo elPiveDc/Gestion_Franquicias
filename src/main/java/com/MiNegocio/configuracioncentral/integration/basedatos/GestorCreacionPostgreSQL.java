@@ -16,23 +16,21 @@ public class GestorCreacionPostgreSQL implements GestorCreacionBD {
         String password = bd.getPasswordHash();
 
         String createDatabaseSQL = "CREATE DATABASE " + nombreBD;
-        String createUserSQL = "CREATE USER " + usuario + " WITH ENCRYPTED PASSWORD '" + password + "'";
+        String createUserSQL = "CREATE USER " + usuario + " WITH PASSWORD '" + password + "'";
         String grantSQL = "GRANT ALL PRIVILEGES ON DATABASE " + nombreBD + " TO " + usuario;
 
-        try (Connection conn = ConexionMultiBDFactory.getConexion("postgresql");
-             Statement stmt = conn.createStatement()) {
+        // 1. Conexión inicial como superusuario para crear la BD y el usuario
+        try (Connection conn = ConexionMultiBDFactory.getConexion("postgresql"); 
+                Statement stmt = conn.createStatement()) {
 
-            // Crear la base de datos
             stmt.executeUpdate(createDatabaseSQL);
-
-            // Crear el usuario
             stmt.executeUpdate(createUserSQL);
-
-            // Otorgar permisos
             stmt.executeUpdate(grantSQL);
 
+            System.out.println("Base de datos y usuario creados correctamente en PostgreSQL.");
         } catch (SQLException e) {
-            throw new RuntimeException("Error creando base de datos PostgreSQL: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
+
     }
 }

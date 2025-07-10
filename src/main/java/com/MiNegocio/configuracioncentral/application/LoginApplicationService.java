@@ -15,6 +15,6 @@ public class LoginApplicationService {
 
     public Usuario login(String correo, String passwordPlano) {
         Optional<Usuario> usuario = usuarioService.login(correo, passwordPlano);
-        return usuario.orElseThrow(() -> new RuntimeException("❌ Usuario o contraseña incorrectos"));
+        return usuario.orElseThrow(() -> new RuntimeException("Usuario o contraseña incorrectos"));
     }
 }

@@ -1,6 +1,7 @@
 package com.MiNegocio.configuracioncentral.domain;
 
 public class BaseDatosFranquicia {
+
     private int id;
     private String nombreBD;
     private TipoBD tipo;
@@ -9,7 +10,8 @@ public class BaseDatosFranquicia {
     private String usuarioBD;
     private String passwordHash;
 
-    public BaseDatosFranquicia() {}
+    public BaseDatosFranquicia() {
+    }
 
     public BaseDatosFranquicia(int id, String nombreBD, TipoBD tipo, EstadoBD estado, String urlConexion, String usuarioBD, String passwordHash) {
         this.id = id;
@@ -22,24 +24,59 @@ public class BaseDatosFranquicia {
     }
 
     // Getters y setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getNombreBD() { return nombreBD; }
-    public void setNombreBD(String nombreBD) { this.nombreBD = nombreBD; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public TipoBD getTipo() { return tipo; }
-    public void setTipo(TipoBD tipo) { this.tipo = tipo; }
+    public String getNombreBD() {
+        return nombreBD;
+    }
 
-    public EstadoBD getEstado() { return estado; }
-    public void setEstado(EstadoBD estado) { this.estado = estado; }
+    public void setNombreBD(String nombreBD) {
+        this.nombreBD = nombreBD;
+    }
 
-    public String getUrlConexion() { return urlConexion; }
-    public void setUrlConexion(String urlConexion) { this.urlConexion = urlConexion; }
+    public TipoBD getTipo() {
+        return tipo;
+    }
 
-    public String getUsuarioBD() { return usuarioBD; }
-    public void setUsuarioBD(String usuarioBD) { this.usuarioBD = usuarioBD; }
+    public void setTipo(TipoBD tipo) {
+        this.tipo = tipo;
+    }
 
-    public String getPasswordHash() { return passwordHash; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public EstadoBD getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoBD estado) {
+        this.estado = estado;
+    }
+
+    public String getUrlConexion() {
+        return urlConexion;
+    }
+
+    public void setUrlConexion(String urlConexion) {
+        this.urlConexion = urlConexion;
+    }
+
+    public String getUsuarioBD() {
+        return usuarioBD;
+    }
+
+    public void setUsuarioBD(String usuarioBD) {
+        this.usuarioBD = usuarioBD;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 }

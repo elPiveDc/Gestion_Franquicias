@@ -1,5 +1,6 @@
 package com.MiNegocio.configuracioncentral.factory;
 
+import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -27,7 +28,6 @@ public class ConexionMultiBDFactory {
             throw new RuntimeException("Error cargando config.properties", e);
         }
     }
-
     public static Connection getConexion(String tipoBD) throws Exception {
         String prefix = tipoBD.toLowerCase(); // mysql, oracle, etc.
 
@@ -52,6 +52,57 @@ public class ConexionMultiBDFactory {
 
             default:
                 throw new IllegalArgumentException("Tipo de BD no soportado: " + prefix);
+        }
+
+        return DriverManager.getConnection(url, user, pass);
+    }
+
+    public static Connection getConexion(String tipoBD, String url) throws Exception {
+        String prefix = tipoBD.toLowerCase(); // mysql, oracle, etc.
+
+        String user = props.getProperty(prefix + ".user");
+        String pass = props.getProperty(prefix + ".password");
+
+        if (url == null || user == null) {
+            throw new IllegalArgumentException("No hay configuración para el tipo de BD: " + tipoBD);
+        }
+
+        switch (prefix) {
+            case "mysql":
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                break;
+            case "oracle":
+                Class.forName("oracle.jdbc.OracleDriver");
+                break;
+            case "postgresql":
+                Class.forName("org.postgresql.Driver");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Tipo de BD no soportado: " + prefix);
+        }
+
+        return DriverManager.getConnection(url, user, pass);
+    }
+
+    public static Connection getConexion(BaseDatosFranquicia bd) throws Exception {
+        String tipo = bd.getTipo().toString().toLowerCase(); // "mysql", "oracle", etc.
+        String url = bd.getUrlConexion();
+        String user = bd.getUsuarioBD();
+        String pass = bd.getPasswordHash();
+
+        switch (tipo) {
+            case "mysql":
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                break;
+            case "oracle":
+                Class.forName("oracle.jdbc.OracleDriver");
+                break;
+            case "postgresql":
+                Class.forName("org.postgresql.Driver");
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de BD no soportado: " + tipo);
         }
 
         return DriverManager.getConnection(url, user, pass);
