@@ -67,6 +67,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
         return Optional.empty();
     }
 
+    @Override
     public Usuario obtenerCreadorDeFranquicia(int idFranquicia) {
         String sql = """
         SELECT u.* FROM usuarios u
@@ -74,7 +75,8 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
         WHERE f.id_franquicia = ?
     """;
 
-        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idFranquicia);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {

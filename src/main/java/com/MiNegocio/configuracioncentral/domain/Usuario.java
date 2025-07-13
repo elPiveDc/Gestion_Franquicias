@@ -16,8 +16,7 @@ public class Usuario {
         this.franquicias = new ArrayList<>();
     }
 
-    public Usuario(int id, String nombre, String correo, String passwordHash, LocalDateTime fechaRegistro) {
-        this.id = id;
+    public Usuario( String nombre, String correo, String passwordHash, LocalDateTime fechaRegistro) {
         this.nombre = nombre;
         this.correo = correo;
         this.passwordHash = passwordHash;

@@ -38,12 +38,14 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
     @Override
     public void crearObjeto(int idBD, ObjetoBDFranquicia objeto) throws Exception {
+        
         BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
 
         objeto.setFechaCreacion(new Date());
         objeto.setIdBD(idBD);
 
         if (!objetoBDRepository.existeTablaUsuariosParaFranquicia(bd.getId_franquicia())) {
+
             int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(bd.getId_franquicia());
 
             // Obtener el usuario creador
@@ -52,7 +54,7 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
             // Crear la tabla e insertar al creador
             crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
 
-            System.out.println("✅ La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
+            System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
         }
 
         // Crear el objeto solicitado
@@ -62,6 +64,7 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
     }
 
     private void crearTablaUsuariosPorDefecto(int idBD, Usuario creador) throws Exception {
+
         BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
 
         ObjetoBDFranquicia tablaUsuarios = new ObjetoBDFranquicia();
@@ -87,24 +90,39 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
         objetoBDRepository.guardarObjetoBD(tablaUsuarios);
 
         // Insertar el usuario creador
-        try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-            String insertSQL = """
+        if (bd.getTipo().toString().equals("POSTGRESQL")) {
+            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
+                String insertSQL = """
                 INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
                 VALUES (?, ?, ?, ?)
             """;
-            PreparedStatement stmt = conn.prepareStatement(insertSQL);
-            stmt.setInt(1, 1);
-            stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
-            stmt.setString(3, creador.getPasswordHash());
-            stmt.setInt(4, 1); // es admin
-            stmt.executeUpdate();
+                PreparedStatement stmt = conn.prepareStatement(insertSQL);
+                stmt.setInt(1, creador.getId());
+                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
+                stmt.setString(3, creador.getPasswordHash());
+                stmt.setInt(4, 1); // es admin
+                stmt.executeUpdate();
+            }
+        } else {
+            try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
+                String insertSQL = """
+                INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
+                VALUES (?, ?, ?, ?)
+            """;
+                PreparedStatement stmt = conn.prepareStatement(insertSQL);
+                stmt.setInt(1, creador.getId());
+                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
+                stmt.setString(3, creador.getPasswordHash());
+                stmt.setInt(4, 1); // es admin
+                stmt.executeUpdate();
+            }
         }
     }
 
     private int preguntarEnQueBDCrearUsuarios(int idFranquicia) {
         List<BaseDatosFranquicia> bds = baseDatosRepository.buscarPorFranquicia(idFranquicia);
 
-        System.out.println("⚠️ Antes de continuar debes crear la tabla obligatoria 'usuarios'.");
+        System.out.println("Antes de continuar debes crear la tabla obligatoria 'usuarios'.");
         System.out.println("Selecciona en qué base de datos deseas crearla:");
 
         for (int i = 0; i < bds.size(); i++) {

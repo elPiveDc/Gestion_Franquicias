@@ -28,6 +28,7 @@ public class ConexionMultiBDFactory {
             throw new RuntimeException("Error cargando config.properties", e);
         }
     }
+    
     public static Connection getConexion(String tipoBD) throws Exception {
         String prefix = tipoBD.toLowerCase(); // mysql, oracle, etc.
 
@@ -58,7 +59,7 @@ public class ConexionMultiBDFactory {
     }
 
     public static Connection getConexion(String tipoBD, String url) throws Exception {
-        String prefix = tipoBD.toLowerCase(); // mysql, oracle, etc.
+        String prefix = tipoBD.toLowerCase();
 
         String user = props.getProperty(prefix + ".user");
         String pass = props.getProperty(prefix + ".password");
@@ -86,6 +87,7 @@ public class ConexionMultiBDFactory {
     }
 
     public static Connection getConexion(BaseDatosFranquicia bd) throws Exception {
+        
         String tipo = bd.getTipo().toString().toLowerCase(); // "mysql", "oracle", etc.
         String url = bd.getUrlConexion();
         String user = bd.getUsuarioBD();

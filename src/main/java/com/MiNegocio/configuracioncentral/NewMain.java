@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class NewMain {
 
     public static void main(String[] args) throws Exception {
         // ==== REPOSITORIOS ====
@@ -64,22 +64,18 @@ public class Main {
 
         // ==== CREACIÓN DE TABLAS INTERACTIVAS ====
         Scanner scanner = new Scanner(System.in);
-        
         System.out.println("\n=== Creación de tabla en " + bdPG.getTipo().name() + " ===");
         ObjetoBDFranquicia tablaPG = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
         System.out.println("\n=== Creación de tabla en " + bdmysql.getTipo().name() + " ===");
         ObjetoBDFranquicia tablamysql = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
-        System.out.println("\n=== Creación de tabla en " + bdPG.getTipo().name() + " ===");
-        ObjetoBDFranquicia tablaORACLE = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
+        System.out.println("\n=== Creación de tabla en " + bdoracle.getTipo().name() + " ===");
+        ObjetoBDFranquicia tablaoracle = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
 
         try {
             objetoService.crearObjeto(bdPG.getId(), tablaPG);
-            System.out.println("\nTodas las tablas se crearon exitosamente.");
             objetoService.crearObjeto(bdmysql.getId(), tablamysql);
+            objetoService.crearObjeto(bdoracle.getId(), tablaoracle);
             System.out.println("\nTodas las tablas se crearon exitosamente.");
-            objetoService.crearObjeto(bdoracle.getId(), tablaORACLE);
-            System.out.println("\nTodas las tablas se crearon exitosamente.");
-            
         } catch (Exception e) {
             System.err.println("Error al crear tablas: " + e.getMessage());
             e.printStackTrace();
@@ -92,7 +88,9 @@ public class Main {
         if (exito && SesionFranquicia.sesionActiva()) {
             UsuarioFranquicia usuario = SesionFranquicia.obtenerUsuarioActual();
             System.out.println("\nAutenticación exitosa. Es administrador: " + usuario.isEsAdmin());
-            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdmysql.getId(), scanner);
+            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdmysql.getId(), bdmysql.getNombreBD() ,scanner);
+            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdPG.getId(), bdPG.getNombreBD(),scanner);
+            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdoracle.getId(),bdoracle.getNombreBD() ,scanner);
         } else {
             System.out.println("\nFalló la autenticación.");
         }
@@ -102,13 +100,14 @@ public class Main {
             ObjetoBDRepositoryImpl objetoRepo,
             BaseDatosRepositoryImpl bdRepo,
             int idBD,
+            String bdnombre,
             Scanner scanner
     ) {
         ServicioCargaDatosImpl servicioCarga = new ServicioCargaDatosImpl(objetoRepo, bdRepo);
         boolean continuar = true;
 
         while (continuar) {
-            System.out.println("\n=== Tablas disponibles para la franquicia ===");
+            System.out.println("\n=== Tablas disponibles para la franquicia en la BD "+ bdnombre +" ===");
             var tablas = objetoRepo.listarObjetosPorBD(idBD);
 
             if (tablas.isEmpty()) {
@@ -136,8 +135,29 @@ public class Main {
             }
 
             ObjetoBDFranquicia seleccionada = tablas.get(opcion - 1);
+
+            System.out.println("\nElige el método de carga:");
+            System.out.println("1. Manual");
+            System.out.println("2. Desde archivo JSON");
+            System.out.println("3. Desde archivo CSV");
+            System.out.print("Opción: ");
+            int metodo = scanner.nextInt();
+            scanner.nextLine(); // limpiar buffer
+
             try {
-                servicioCarga.cargarDesdeManual(seleccionada.getIdObjeto());
+                switch (metodo) {
+                    case 1:
+                        servicioCarga.cargarDesdeManual(seleccionada.getIdObjeto());
+                        break;
+                    case 2:
+                        servicioCarga.cargarDesdeJSON(seleccionada.getIdObjeto());
+                        break;
+                    case 3:
+                        servicioCarga.cargarDesdeCSV(seleccionada.getIdObjeto());
+                        break;
+                    default:
+                        System.out.println("Método no válido.");
+                }
             } catch (Exception e) {
                 System.err.println("Error durante carga de datos: " + e.getMessage());
                 e.printStackTrace();
@@ -146,4 +166,5 @@ public class Main {
 
         System.out.println("\nFin del ingreso de datos.");
     }
+
 }

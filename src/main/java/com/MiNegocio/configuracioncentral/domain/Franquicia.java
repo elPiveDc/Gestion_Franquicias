@@ -16,12 +16,11 @@ public class Franquicia {
         this.basesDatos = new ArrayList<>();
     }
 
-    public Franquicia(int id, String nombre, LocalDateTime fechaCreacion, EstadoFranquicia estado, Usuario propietario) {
-        this.id = id;
+    public Franquicia(String nombre, LocalDateTime fechaCreacion, EstadoFranquicia estad) {
+       
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;
         this.estado = estado;
-        this.propietario = propietario;
         this.basesDatos = new ArrayList<>();
     }
 

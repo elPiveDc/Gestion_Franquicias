@@ -121,4 +121,23 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
         obj.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
         return obj;
     }
+
+    @Override
+    public ObjetoBDFranquicia buscarPorId(int idObjeto) {
+        String sql = "SELECT * FROM objetos_bd_franquicia WHERE id_objeto = ?";
+
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idObjeto);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearObjeto(rs);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar el objeto con ID " + idObjeto, e);
+        }
+
+        return null;
+    }
 }

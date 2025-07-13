@@ -21,6 +21,16 @@ public class BaseDatosFranquicia {
     public BaseDatosFranquicia() {
     }
 
+    public BaseDatosFranquicia( String nombreBD, TipoBD tipo, EstadoBD estado, String urlConexion, String usuarioBD, String passwordHash) {
+
+        this.nombreBD = nombreBD;
+        this.tipo = tipo;
+        this.estado = estado;
+        this.urlConexion = urlConexion;
+        this.usuarioBD = usuarioBD;
+        this.passwordHash = passwordHash;
+    }
+
     public BaseDatosFranquicia(int id, int id_franquicia, String nombreBD, TipoBD tipo, EstadoBD estado, String urlConexion, String usuarioBD, String passwordHash) {
         this.id = id;
         this.id_franquicia = id_franquicia;
@@ -31,7 +41,6 @@ public class BaseDatosFranquicia {
         this.usuarioBD = usuarioBD;
         this.passwordHash = passwordHash;
     }
-
     
 
     // Getters y setters

@@ -10,8 +10,12 @@ public interface ObjetoBDRepository {
     List<ObjetoBDFranquicia> listarObjetosPorBD(int idBD);
 
     ObjetoBDFranquicia buscarObjetoPorNombre(String nombreTabla, int idBD);
+    
+    ObjetoBDFranquicia buscarPorId(int idObjeto);
 
     public boolean existeTablaUsuarios(int idBD);
 
     public boolean existeTablaUsuariosParaFranquicia(int idFranquicia);
+    
+    
 }

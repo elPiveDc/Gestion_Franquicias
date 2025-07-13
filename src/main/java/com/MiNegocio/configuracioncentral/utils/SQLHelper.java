@@ -1,10 +1,15 @@
 package com.MiNegocio.configuracioncentral.utils;
 
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
+import com.MiNegocio.configuracioncentral.domain.TipoBD;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SQLHelper {
 
@@ -149,5 +154,39 @@ public class SQLHelper {
             default ->
                 throw new IllegalArgumentException("Base de datos no soportada: " + bd);
         };
+    }
+
+    //metodo para insert manual
+    public static String generarInsertSQL(String nombreTabla, String columnasJson, TipoBD tipoBD) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode columnasArray = mapper.readTree(columnasJson);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("INSERT INTO ").append(nombreTabla).append(" (");
+
+            for (int i = 0; i < columnasArray.size(); i++) {
+                JsonNode columna = columnasArray.get(i);
+                sb.append(columna.get("nombre").asText());
+                if (i < columnasArray.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+
+            sb.append(") VALUES (");
+
+            for (int i = 0; i < columnasArray.size(); i++) {
+                sb.append("?");
+                if (i < columnasArray.size() - 1) {
+                    sb.append(", ");
+                }
+            }
+
+            sb.append(")");
+
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar SQL de inserción: " + e.getMessage(), e);
+        }
     }
 }

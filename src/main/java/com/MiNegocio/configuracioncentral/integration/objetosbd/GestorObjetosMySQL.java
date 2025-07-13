@@ -3,7 +3,6 @@ package com.MiNegocio.configuracioncentral.integration.objetosbd;
 import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
-import com.MiNegocio.configuracioncentral.factory.ConexionBDFactory;
 import com.MiNegocio.configuracioncentral.utils.SQLHelper;
 
 import java.sql.Connection;
@@ -15,7 +14,6 @@ public class GestorObjetosMySQL implements GestorObjetosBD {
     public void crearObjeto(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
         
         String sql = SQLHelper.generarCreateSQL(objeto, bd.getTipo().toString(), bd.getNombreBD());
-        System.out.println("SQL generado para MySQL:\n" + sql);
 
         try (Connection conn = ConexionMultiBDFactory.getConexion(bd);
              Statement stmt = conn.createStatement()) {

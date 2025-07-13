@@ -2,7 +2,6 @@ package com.MiNegocio.configuracioncentral.integration.objetosbd;
 
 import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
-import com.MiNegocio.configuracioncentral.factory.ConexionBDFactory;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import com.MiNegocio.configuracioncentral.utils.SQLHelper;
 
@@ -14,10 +13,10 @@ public class GestorObjetosPostgreSQL implements GestorObjetosBD {
     @Override
     public void crearObjeto(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
 
-        String sql = SQLHelper.generarCreateSQL(objeto, bd.getTipo().toString(), bd.getNombreBD());
-        System.out.println("SQL generado para PG:\n" + sql);
+        String sql = SQLHelper.generarCreateSQL(objeto, "POSTGRESQL", bd.getNombreBD());
+        
 
-        try (Connection conn = ConexionMultiBDFactory.getConexion(bd.getTipo().toString(), bd.getUrlConexion()); 
+        try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion()); 
                 Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
             System.out.println("Tabla creada exitosamente en PostgreSQL: " + objeto.getNombreTabla());
