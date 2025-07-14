@@ -189,4 +189,35 @@ public class SQLHelper {
             throw new RuntimeException("Error al generar SQL de inserción: " + e.getMessage(), e);
         }
     }
+
+    public static String generarConsultaSimple(String nombreTabla, TipoBD tipoBD) {
+        return "SELECT * FROM " + formatearNombreTabla(nombreTabla, tipoBD);
+    }
+
+    //consultas    
+    public static String generarConsultaFiltrada(String nombreTabla, List<String> columnasFiltro, TipoBD tipoBD) {
+        String tablaFormateada = formatearNombreTabla(nombreTabla, tipoBD);
+        String condiciones = columnasFiltro.stream()
+                .map(col -> col + " = ?")
+                .collect(Collectors.joining(" AND "));
+        return "SELECT * FROM " + tablaFormateada + " WHERE " + condiciones;
+    }
+
+    public static String generarConsultaJoin(String tabla1, String tabla2, String columna1, String columna2, TipoBD tipoBD) {
+        return "SELECT * FROM " + formatearNombreTabla(tabla1, tipoBD)
+                + " t1 INNER JOIN " + formatearNombreTabla(tabla2, tipoBD) + " t2 ON t1." + columna1 + " = t2." + columna2;
+    }
+
+    private static String formatearNombreTabla(String nombre, TipoBD tipoBD) {
+        String tipo = null;
+        switch (tipoBD) {
+            case POSTGRESQL ->
+               tipo = "\"" + nombre + "\"";
+            case ORACLE ->
+                tipo = nombre.toUpperCase();
+            case MYSQL ->
+                tipo = "`" + nombre + "`";
+        }
+        return tipo;
+    }
 }

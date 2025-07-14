@@ -25,8 +25,15 @@ public class ConstructorTablaInteractiva {
             System.out.print("Nombre de la columna: ");
             columna.put("nombre", scanner.nextLine());
 
-            System.out.print("Tipo (entero, cadena, decimal, fecha): ");
-            columna.put("tipo", scanner.nextLine());
+            String tipo;
+            do {
+                System.out.print("Tipo (entero, cadena, decimal, fecha): ");
+                tipo = scanner.nextLine().trim();
+                if (tipo.isEmpty()) {
+                    System.out.println("⚠️ El tipo de dato es obligatorio. Intenta nuevamente.");
+                }
+            } while (tipo.isEmpty());
+            columna.put("tipo", tipo);
 
             System.out.print("Restricciones (ej: PRIMARY KEY, NOT NULL), dejar vacío si ninguna: ");
             columna.put("restricciones", scanner.nextLine());
