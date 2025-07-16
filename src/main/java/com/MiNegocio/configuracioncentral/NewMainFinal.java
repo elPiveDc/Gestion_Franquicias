@@ -6,7 +6,7 @@ import com.MiNegocio.accesousuarios.UsuarioFranquicia;
 import com.MiNegocio.configuracioncentral.application.RegistroInicialService;
 import com.MiNegocio.configuracioncentral.domain.*;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
-import com.MiNegocio.configuracioncentral.factory.GestorObjetosFactory;
+import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFactory;
 import com.MiNegocio.configuracioncentral.repository.impl.*;
 import com.MiNegocio.configuracioncentral.service.impl.*;
 import com.MiNegocio.configuracioncentral.utils.ConstructorTablaInteractiva;
@@ -21,6 +21,7 @@ import java.util.Scanner;
 public class NewMainFinal {
 
     public static void main(String[] args) throws Exception {
+
         UsuarioRepositoryImpl usuarioRepo = new UsuarioRepositoryImpl();
         FranquiciaRepositoryImpl franquiciaRepo = new FranquiciaRepositoryImpl();
         BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
@@ -34,27 +35,34 @@ public class NewMainFinal {
         );
         RegistroInicialService registro = new RegistroInicialService(usuarioService, franquiciaService, bdService);
 
-        Usuario nuevoUsuario = new Usuario("Jimena Condor", "Jimena@Pajaritos.com", "Pajarito123", LocalDateTime.now());
-        Franquicia nuevaFranquicia = new Franquicia("Pajaros bien Ricos", LocalDateTime.now(), EstadoFranquicia.ACTIVA);
+        Usuario nuevoUsuario
+                = new Usuario("Jimena Condor", "Jimena@Carros.com", "Carros123", LocalDateTime.now());
 
+        Franquicia nuevaFranquicia
+                = new Franquicia("Pajaros bien Ricos", LocalDateTime.now(), EstadoFranquicia.ACTIVA);
+
+        
         BaseDatosFranquicia bdPG = new BaseDatosFranquicia(
                 "bd_pajaros_pg", TipoBD.POSTGRESQL, EstadoBD.NO_CONFIGURADA,
                 "jdbc:postgresql://localhost:5432/bd_pajaros_pg",
                 "usuario_pajaros_pg", "Pajaros"
         );
+        
         BaseDatosFranquicia bdmysql = new BaseDatosFranquicia(
-                "bd_pajaros_mysql", TipoBD.MYSQL, EstadoBD.NO_CONFIGURADA,
-                "jdbc:mysql://localhost:3306/bd_pajaros_mysql",
-                "usuario_pajaros_mysql", "Pajaros"
+                "bd_carros_mysql", TipoBD.MYSQL, EstadoBD.NO_CONFIGURADA,
+                "jdbc:mysql://localhost:3306/bd_carros_mysql",
+                "usuario_carros_mysql", "Carros"
         );
+
+        
         BaseDatosFranquicia bdoracle = new BaseDatosFranquicia(
                 "bd_pajaros_oracle", TipoBD.ORACLE, EstadoBD.NO_CONFIGURADA,
                 "jdbc:oracle:thin:@localhost:1521/XEPDB1",
                 "usuario_pajaros_oracle", "Pajaros"
         );
-
+        
         try {
-            registro.registrarUsuarioYNegocio(nuevoUsuario, nuevaFranquicia, Arrays.asList(bdPG, bdmysql, bdoracle));
+            registro.registrarUsuarioYNegocio(nuevoUsuario, nuevaFranquicia, Arrays.asList(bdPG,bdoracle, bdmysql));
             System.out.println("\nRegistro y bases de datos completadas.");
         } catch (Exception e) {
             System.err.println("Error al registrar: " + e.getMessage());
@@ -62,17 +70,22 @@ public class NewMainFinal {
         }
 
         Scanner scanner = new Scanner(System.in);
+
+        /*
         System.out.println("\n=== Creación de tabla en " + bdPG.getTipo().name() + " ===");
         ObjetoBDFranquicia tablaPG = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
+        */
+        
         System.out.println("\n=== Creación de tabla en " + bdmysql.getTipo().name() + " ===");
-        ObjetoBDFranquicia tablamysql = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
+        ObjetoBDFranquicia tablamysql = ConstructorTablaInteractiva.crearTablaInteractiva();
+        
+        /*
         System.out.println("\n=== Creación de tabla en " + bdoracle.getTipo().name() + " ===");
         ObjetoBDFranquicia tablaoracle = ConstructorTablaInteractiva.crearTablaDesdeConsola(scanner);
+        */
 
         try {
-            objetoService.crearObjeto(bdPG.getId(), tablaPG);
             objetoService.crearObjeto(bdmysql.getId(), tablamysql);
-            objetoService.crearObjeto(bdoracle.getId(), tablaoracle);
             System.out.println("\nTodas las tablas se crearon exitosamente.");
         } catch (Exception e) {
             System.err.println("Error al crear tablas: " + e.getMessage());
@@ -83,15 +96,14 @@ public class NewMainFinal {
         boolean exito = auth.autenticar(nuevaFranquicia.getNombre(), nuevoUsuario.getCorreo(), nuevoUsuario.getPasswordHash());
 
         if (exito && SesionFranquicia.sesionActiva()) {
+            
+            
             UsuarioFranquicia usuario = SesionFranquicia.obtenerUsuarioActual();
             System.out.println("\nAutenticación exitosa. Es administrador: " + usuario.isEsAdmin());
 
             mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdmysql.getId(), bdmysql.getNombreBD(), scanner);
-            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdPG.getId(), bdPG.getNombreBD(), scanner);
-            mostrarModuloIngresoDatos(objetoRepo, bdRepo, bdoracle.getId(), bdoracle.getNombreBD(), scanner);
-            mostrarModuloConsultas(objetoRepo, bdRepo, bdPG.getId(), bdPG.getNombreBD(), scanner);
+
             mostrarModuloConsultas(objetoRepo, bdRepo, bdmysql.getId(), bdmysql.getNombreBD(), scanner);
-            mostrarModuloConsultas(objetoRepo, bdRepo, bdoracle.getId(), bdoracle.getNombreBD(), scanner);
 
         } else {
             System.out.println("\nFalló la autenticación.");
@@ -152,8 +164,10 @@ public class NewMainFinal {
                         servicioCarga.cargarDesdeManual(seleccionada.getIdObjeto());
                     case 2 ->
                         servicioCarga.cargarDesdeJSON(seleccionada.getIdObjeto());
+                        
                     case 3 ->
                         servicioCarga.cargarDesdeCSV(seleccionada.getIdObjeto());
+                        
                     default ->
                         System.out.println("Método no válido.");
                 }

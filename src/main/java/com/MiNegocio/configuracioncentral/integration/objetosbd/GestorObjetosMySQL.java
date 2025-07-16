@@ -20,7 +20,7 @@ public class GestorObjetosMySQL implements GestorObjetosBD {
 
             stmt.executeUpdate(sql);
             System.out.println("Objeto creado correctamente en MySQL: " + objeto.getNombreTabla());
-
+            
         } catch (Exception e) {
             throw new RuntimeException("Error al crear objeto en MySQL", e);
         }

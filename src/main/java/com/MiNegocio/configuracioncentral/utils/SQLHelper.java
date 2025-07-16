@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class SQLHelper {
 
     // ---------- MYSQL ----------
     private static String generarCreateTableMySQL(ObjetoBDFranquicia objeto, String nombreBD) throws Exception {
+
         ObjectMapper mapper = new ObjectMapper();
         List<Map<String, String>> columnas = mapper.readValue(objeto.getColumnas(), List.class);
 
@@ -156,6 +158,87 @@ public class SQLHelper {
         };
     }
 
+    public static String extraerColumnasDeCreateSQL(String createSQL) throws Exception {
+        List<Map<String, String>> columnas = new ArrayList<>();
+
+        // Normalizar espacios y saltos de línea
+        createSQL = createSQL.replaceAll("[\\n\\r]+", " ").trim();
+
+        // Extraer contenido entre paréntesis (las columnas)
+        int start = createSQL.indexOf('(');
+        int end = createSQL.lastIndexOf(')');
+        if (start == -1 || end == -1 || start >= end) {
+            throw new IllegalArgumentException("CREATE TABLE inválido: no se encontraron paréntesis");
+        }
+
+        String columnasStr = createSQL.substring(start + 1, end).trim();
+
+        // Separar columnas por coma, respetando posibles comas internas (ej. ENUM o CHECK)
+        List<String> definiciones = splitColumnDefinitions(columnasStr);
+
+        for (String def : definiciones) {
+            def = def.trim();
+            if (def.isBlank()) {
+                continue;
+            }
+
+            String[] partes = def.split("\\s+", 3); // nombre tipo restricciones
+
+            if (partes.length < 2) {
+                continue;
+            }
+
+            Map<String, String> columna = new LinkedHashMap<>();
+            columna.put("nombre", partes[0].replaceAll("\"", "")); // quitar comillas
+            columna.put("tipo", mapearTipoAJson(partes[1]));
+            columna.put("restricciones", partes.length >= 3 ? partes[2].trim() : "");
+
+            columnas.add(columna);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(columnas);
+    }
+
+    private static List<String> splitColumnDefinitions(String input) {
+        List<String> result = new ArrayList<>();
+        int parenLevel = 0;
+        StringBuilder current = new StringBuilder();
+
+        for (char c : input.toCharArray()) {
+            if (c == '(') {
+                parenLevel++;
+            }
+            if (c == ')') {
+                parenLevel--;
+            }
+            if (c == ',' && parenLevel == 0) {
+                result.add(current.toString().trim());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
+        if (current.length() > 0) {
+            result.add(current.toString().trim());
+        }
+        return result;
+    }
+
+    private static String mapearTipoAJson(String tipoSQL) {
+        tipoSQL = tipoSQL.toLowerCase();
+        if (tipoSQL.startsWith("varchar") || tipoSQL.startsWith("text") || tipoSQL.startsWith("char")) {
+            return "cadena";
+        }
+        if (tipoSQL.startsWith("int") || tipoSQL.startsWith("integer") || tipoSQL.startsWith("number")) {
+            return "entero";
+        }
+        if (tipoSQL.startsWith("date") || tipoSQL.startsWith("timestamp")) {
+            return "fecha";
+        }
+        return tipoSQL; // por si acaso
+    }
+
     //metodo para insert manual
     public static String generarInsertSQL(String nombreTabla, String columnasJson, TipoBD tipoBD) {
         try {
@@ -212,7 +295,7 @@ public class SQLHelper {
         String tipo = null;
         switch (tipoBD) {
             case POSTGRESQL ->
-               tipo = "\"" + nombre + "\"";
+                tipo = "\"" + nombre + "\"";
             case ORACLE ->
                 tipo = nombre.toUpperCase();
             case MYSQL ->

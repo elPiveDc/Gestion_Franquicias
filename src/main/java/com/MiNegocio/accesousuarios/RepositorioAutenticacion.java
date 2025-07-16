@@ -8,8 +8,25 @@ import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class RepositorioAutenticacion {
+
+    public boolean existeFranquicia(String nombreFranquicia) {
+        String query = "SELECT 1 FROM franquicias WHERE nombre_franquicia = ? LIMIT 1";
+
+        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, nombreFranquicia);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public BaseDatosFranquicia obtenerBDUsuariosPorFranquicia(String nombreFranquicia) throws Exception {
         String query = """
@@ -48,7 +65,7 @@ public class RepositorioAutenticacion {
     public UsuarioFranquicia verificarCredenciales(BaseDatosFranquicia bd, String correo, String passwordHash) throws Exception {
 
         if (bd.getTipo().toString() == "POSTGRESQL") {
-            
+
             try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
 
                 String sql = construirSQLAutenticacion(bd.getTipo());

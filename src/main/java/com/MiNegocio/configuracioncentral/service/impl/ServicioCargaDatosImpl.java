@@ -8,7 +8,6 @@ import com.MiNegocio.configuracioncentral.repository.BaseDatosRepository;
 import com.MiNegocio.configuracioncentral.repository.ObjetoBDRepository;
 import com.MiNegocio.configuracioncentral.service.ServicioCargaDatos;
 
-import java.io.File;
 
 public class ServicioCargaDatosImpl implements ServicioCargaDatos {
 
@@ -22,31 +21,33 @@ public class ServicioCargaDatosImpl implements ServicioCargaDatos {
 
     @Override
     public void cargarDesdeCSV(int idObjeto) throws Exception {
-        
+
         ObjetoBDFranquicia objeto = obtenerObjetoValidado(idObjeto);
         BaseDatosFranquicia bd = bdRepo.buscarPorId(objeto.getIdBD());
 
         CargadorDatos cargador = CargadorDatosFactory.obtenerCargador("csv");
-        
+
         cargador.cargar(bd, objeto.getNombreTabla(), objeto.getColumnas());
+
     }
 
     @Override
     public void cargarDesdeJSON(int idObjeto) throws Exception {
         ObjetoBDFranquicia objeto = obtenerObjetoValidado(idObjeto);
-        
+
         BaseDatosFranquicia bd = bdRepo.buscarPorId(objeto.getIdBD());
 
         CargadorDatos cargador = CargadorDatosFactory.obtenerCargador("json");
-        
-        cargador.cargar(bd, objeto.getNombreTabla() ,objeto.getColumnas());
+
+        cargador.cargar(bd, objeto.getNombreTabla(), objeto.getColumnas());
+
     }
 
     @Override
     public void cargarDesdeManual(int idObjeto) throws Exception {
-        
+
         ObjetoBDFranquicia objeto = obtenerObjetoValidado(idObjeto);
-        
+
         BaseDatosFranquicia bd = bdRepo.buscarPorId(objeto.getIdBD());
 
         CargadorDatos cargador = CargadorDatosFactory.obtenerCargador("manual");

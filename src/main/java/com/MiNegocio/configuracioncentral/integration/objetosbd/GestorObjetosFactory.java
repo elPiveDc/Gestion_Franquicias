@@ -1,11 +1,6 @@
-package com.MiNegocio.configuracioncentral.factory;
+package com.MiNegocio.configuracioncentral.integration.objetosbd;
 
 import com.MiNegocio.configuracioncentral.domain.TipoBD;
-import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosBD;
-import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosMySQL;
-import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosOracle;
-import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosPostgreSQL;
-// import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosOracle;
 
 public class GestorObjetosFactory {
 

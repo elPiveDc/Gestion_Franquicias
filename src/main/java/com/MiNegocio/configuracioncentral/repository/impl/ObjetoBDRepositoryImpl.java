@@ -2,16 +2,23 @@ package com.MiNegocio.configuracioncentral.repository.impl;
 
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.factory.ConexionBDFactory;
+import com.MiNegocio.configuracioncentral.factory.ConexionNoSQL;
 import com.MiNegocio.configuracioncentral.repository.ObjetoBDRepository;
-
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import java.util.Date;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.Document;
+import org.json.JSONArray;
 
 public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
 
     @Override
     public void guardarObjetoBD(ObjetoBDFranquicia objeto) {
+
         String sql = "INSERT INTO objetos_bd_franquicia "
                 + "(id_bd, nombre_tabla, tipo_objeto, es_tabla_usuarios, columnas, fecha_creacion) "
                 + "VALUES( ?,  ?,  ?,  ?,  ?,  ?)";
@@ -29,6 +36,39 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException("Error al guardar el objeto en la base de datos central", e);
+        }
+    }
+
+    @Override
+    public void guardarObjetoEnMongo(ObjetoBDFranquicia objeto) {
+        try {
+            MongoClient mongoClient = ConexionNoSQL.getMongoConexion();
+
+            MongoDatabase db = mongoClient.getDatabase("bdcentral");
+            MongoCollection<Document> coleccion = db.getCollection("objetos_bd_franquicia");
+
+            List<Document> columnasList = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(objeto.getColumnas());
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                columnasList.add(Document.parse(jsonArray.getJSONObject(i).toString()));
+            }
+
+            // Crea el documento principal para guardar
+            Document doc = new Document()
+                    .append("id_objeto", objeto.getIdObjeto())
+                    .append("id_bd", objeto.getIdBD())
+                    .append("nombre_tabla", objeto.getNombreTabla())
+                    .append("tipo_objeto", objeto.getTipoObjeto())
+                    .append("es_tabla_usuarios", objeto.isEsTablaUsuarios())
+                    .append("columnas", columnasList)
+                    .append("fecha_creacion", objeto.getFechaCreacion() != null ? objeto.getFechaCreacion() : new Date());
+
+            // Inserta el documento en Mongo
+            coleccion.insertOne(doc);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el objeto en MongoDB", e);
         }
     }
 
@@ -140,6 +180,5 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
 
         return null;
     }
-    
-    
+
 }

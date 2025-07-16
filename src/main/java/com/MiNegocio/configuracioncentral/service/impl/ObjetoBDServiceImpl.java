@@ -4,11 +4,12 @@ import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.domain.Usuario;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
-import com.MiNegocio.configuracioncentral.factory.GestorObjetosFactory;
+import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFactory;
 import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosBD;
 import com.MiNegocio.configuracioncentral.repository.BaseDatosRepository;
 import com.MiNegocio.configuracioncentral.repository.ObjetoBDRepository;
 import com.MiNegocio.configuracioncentral.repository.UsuarioRepository;
+import com.MiNegocio.configuracioncentral.service.IAService;
 import com.MiNegocio.configuracioncentral.service.ObjetoBDService;
 
 import java.sql.Connection;
@@ -56,12 +57,47 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
             System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
         }
+        
+        // Crear el objeto solicitado
+        GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
+        
+        gestor.crearObjeto(bd, objeto);
+        objetoBDRepository.guardarObjetoBD(objeto);
+        objetoBDRepository.guardarObjetoEnMongo(objeto);
+    }
 
+    public void crearObjetoConIA(int idBD, String consulta) throws Exception {
+        
+        ObjetoBDFranquicia objeto = new ObjetoBDFranquicia();
+        BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
+
+        objeto.setFechaCreacion(new Date());
+        objeto.setIdBD(idBD);
+
+        if (!objetoBDRepository.existeTablaUsuariosParaFranquicia(bd.getId_franquicia())) {
+
+            int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(bd.getId_franquicia());
+
+            // Obtener el usuario creador
+            Usuario creador = usuarioRepository.obtenerCreadorDeFranquicia(bd.getId_franquicia());
+
+            // Crear la tabla e insertar al creador
+            crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
+
+            System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
+        }
+        
+        String json = IAService.generarSQLDesdePregunta(consulta + 
+                "usa la confiiguracion de lengujae SQL para el tipo de bd: " + bd.getTipo());
+        objeto.setColumnas(json);
+        
         // Crear el objeto solicitado
         GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
         gestor.crearObjeto(bd, objeto);
         objetoBDRepository.guardarObjetoBD(objeto);
+        objetoBDRepository.guardarObjetoEnMongo(objeto);
     }
+    
 
     private void crearTablaUsuariosPorDefecto(int idBD, Usuario creador) throws Exception {
 
@@ -88,6 +124,7 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
         // Registrar en objetos_bd_franquicia
         objetoBDRepository.guardarObjetoBD(tablaUsuarios);
+        objetoBDRepository.guardarObjetoEnMongo(tablaUsuarios);
 
         // Insertar el usuario creador
         if (bd.getTipo().toString().equals("POSTGRESQL")) {

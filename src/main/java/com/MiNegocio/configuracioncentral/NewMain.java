@@ -6,7 +6,7 @@ import com.MiNegocio.accesousuarios.UsuarioFranquicia;
 import com.MiNegocio.configuracioncentral.application.RegistroInicialService;
 import com.MiNegocio.configuracioncentral.domain.*;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
-import com.MiNegocio.configuracioncentral.factory.GestorObjetosFactory;
+import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFactory;
 import com.MiNegocio.configuracioncentral.repository.impl.*;
 import com.MiNegocio.configuracioncentral.service.impl.*;
 

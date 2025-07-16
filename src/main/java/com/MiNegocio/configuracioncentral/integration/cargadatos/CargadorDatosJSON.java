@@ -76,9 +76,9 @@ public class CargadorDatosJSON implements CargadorDatos {
                         }
 
                         stmt.executeUpdate();
-                        System.out.println("✔ Fila insertada correctamente.");
+                        System.out.println("Fila insertada correctamente.");
                     } catch (Exception e) {
-                        System.err.println("❌ Error al insertar fila: " + e.getMessage());
+                        System.err.println("Error al insertar fila: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -116,14 +116,15 @@ public class CargadorDatosJSON implements CargadorDatos {
                         }
 
                         stmt.executeUpdate();
-                        System.out.println("✔ Fila insertada correctamente.");
+                        System.out.println("Fila insertada correctamente.");
                     } catch (Exception e) {
-                        System.err.println("❌ Error al insertar fila: " + e.getMessage());
+                        System.err.println("Error al insertar fila: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
             }
         }
-
+        
+        
     }
 }

@@ -28,8 +28,9 @@ public class ConexionMultiBDFactory {
             throw new RuntimeException("Error cargando config.properties", e);
         }
     }
-    
+
     public static Connection getConexion(String tipoBD) throws Exception {
+
         String prefix = tipoBD.toLowerCase(); // mysql, oracle, etc.
 
         String url = props.getProperty(prefix + ".url");
@@ -87,7 +88,7 @@ public class ConexionMultiBDFactory {
     }
 
     public static Connection getConexion(BaseDatosFranquicia bd) throws Exception {
-        
+
         String tipo = bd.getTipo().toString().toLowerCase(); // "mysql", "oracle", etc.
         String url = bd.getUrlConexion();
         String user = bd.getUsuarioBD();
@@ -108,22 +109,6 @@ public class ConexionMultiBDFactory {
         }
 
         return DriverManager.getConnection(url, user, pass);
-    }
-
-    public static MongoClient getMongoConexion() {
-        String url = props.getProperty("mongodb.url");
-        String user = props.getProperty("mongodb.user");
-        String pass = props.getProperty("mongodb.password");
-
-        MongoCredential credential = MongoCredential.createCredential(user, "admin", pass.toCharArray());
-
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .credential(credential)
-                .applyToClusterSettings(builder
-                        -> builder.hosts(Collections.singletonList(new ServerAddress("localhost", 27017))))
-                .build();
-
-        return MongoClients.create(settings);
     }
 
 }

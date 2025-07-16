@@ -15,6 +15,7 @@ import java.util.Scanner;
 public class ConsultaIA {
 
     public void consultar(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto, Scanner scanner) throws Exception {
+        
         System.out.println("\n--- Consulta IA para tabla '" + objeto.getNombreTabla() + "' ---");
         System.out.println("Describe lo que deseas consultar en lenguaje natural:");
         String pregunta = scanner.nextLine();
@@ -49,6 +50,7 @@ public class ConsultaIA {
     }
 
     private String generarSQLDesdePregunta(String texto, ObjetoBDFranquicia objeto, BaseDatosFranquicia bd) throws Exception {
+        
         StringBuilder esquema = new StringBuilder();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode columnas = mapper.readTree(objeto.getColumnas());

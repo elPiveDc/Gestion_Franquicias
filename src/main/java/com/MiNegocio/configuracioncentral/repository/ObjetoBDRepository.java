@@ -6,6 +6,8 @@ import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 public interface ObjetoBDRepository {
 
     void guardarObjetoBD(ObjetoBDFranquicia objeto);
+    
+    void guardarObjetoEnMongo(ObjetoBDFranquicia objeto);
 
     List<ObjetoBDFranquicia> listarObjetosPorBD(int idBD);
 
