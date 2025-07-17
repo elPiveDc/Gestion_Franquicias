@@ -17,11 +17,11 @@ C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configur
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\ServicioCargaDatos.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\repository\impl\ObjetoBDRepositoryImpl.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\impl\ObjetoBDServiceImpl.java
-C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\ui\FrameDashboard.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosJSON.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\repository\UsuarioRepository.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\impl\BaseDatosServiceImpl.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\impl\ServicioCargaDatosImpl.java
+C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\interfazgrafica\BusquedaFranquicia.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\ObjetoBDService.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\consultas\ConsultaIA.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\utils\SQLHelper.java
@@ -57,7 +57,6 @@ C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configur
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\utils\SelectorCargaYConsultaFrame.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosManual.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosMySQL.java
-C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\interfazgrafica\PaginaPrincipal.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\interfazgrafica\PanelConfBD.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\repository\impl\UsuarioRepositoryImpl.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\service\impl\UsuarioServiceImpl.java
@@ -65,7 +64,5 @@ C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\interfaz
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\repository\impl\FranquiciaRepositoryImpl.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\domain\AuditoriaCarga.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\accesousuarios\UsuarioFranquicia.java
-C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\ui\FrameInicioSesion.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\interfazgrafica\VentanaPrincipal.java
 C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\configuracioncentral\integration\basedatos\GestorCreacionBDFactory.java
-C:\Users\USUARIO\OneDrive\Desktop\MiNegocio\src\main\java\com\MiNegocio\ui\FrameRegistro.java
