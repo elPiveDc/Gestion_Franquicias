@@ -64,7 +64,7 @@ public class PanelSelectorCargaYConsulta extends JPanel {
         comboTablas = new JComboBox<>();
         comboAccion = new JComboBox<>(new String[]{"Registrar (Cargar datos)", "Consultar"});
         comboSubaccion = new JComboBox<>();
-        btnEjecutar = new JButton("▶ Ejecutar");
+        btnEjecutar = new JButton("Ejecutar");
 
         JLabel lblBD = new JLabel("Selecciona Base de Datos:");
         JLabel lblTablas = new JLabel("Selecciona tabla:");

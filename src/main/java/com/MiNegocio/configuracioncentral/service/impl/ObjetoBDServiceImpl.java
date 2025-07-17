@@ -45,23 +45,6 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
         objeto.setFechaCreacion(new Date());
         objeto.setIdBD(idBD);
-
-        if (!objetoBDRepository.existeTablaUsuariosParaFranquicia(bd.getId_franquicia())) {
-
-            int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(bd.getId_franquicia());
-
-            // Obtener el usuario creador
-            Usuario creador = usuarioRepository.obtenerCreadorDeFranquicia(bd.getId_franquicia());
-
-            // Crear la tabla e insertar al creador
-            crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
-
-            JOptionPane.showMessageDialog(null,
-                    "La tabla 'usuarios' fue creada correctamente con el usuario inicial.",
-                    "CONFIRMACION",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-
         // Crear el objeto solicitado
         GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
 
@@ -77,20 +60,6 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
         objeto.setFechaCreacion(new Date());
         objeto.setIdBD(idBD);
-
-        if (!objetoBDRepository.existeTablaUsuariosParaFranquicia(bd.getId_franquicia())) {
-
-            int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(bd.getId_franquicia());
-
-            // Obtener el usuario creador
-            Usuario creador = usuarioRepository.obtenerCreadorDeFranquicia(bd.getId_franquicia());
-
-            // Crear la tabla e insertar al creador
-            crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
-
-            System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
-        }
-
         String json = IAService.generarSQLDesdePregunta(consulta
                 + "usa la confiiguracion de lengujae SQL para el tipo de bd: " + bd.getTipo());
         objeto.setColumnas(json);
@@ -102,103 +71,5 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
         objetoBDRepository.guardarObjetoEnMongo(objeto);
     }
 
-    private void crearTablaUsuariosPorDefecto(int idBD, Usuario creador) throws Exception {
-
-        BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
-
-        ObjetoBDFranquicia tablaUsuarios = new ObjetoBDFranquicia();
-        tablaUsuarios.setNombreTabla("usuarios");
-        tablaUsuarios.setTipoObjeto("TABLA");
-        tablaUsuarios.setEsTablaUsuarios(true);
-        tablaUsuarios.setIdBD(idBD);
-        tablaUsuarios.setFechaCreacion(new Date());
-        tablaUsuarios.setColumnas("""
-        [
-          {"nombre":"id_usuario", "tipo":"entero", "restricciones":"PRIMARY KEY"},
-          {"nombre":"nombre_usuario", "tipo":"cadena", "restricciones":"NOT NULL"},
-          {"nombre":"password_hash", "tipo":"cadena", "restricciones":"NOT NULL"},
-          {"nombre":"es_admin", "tipo":"entero", "restricciones":"DEFAULT 1"}
-        ]
-        """);
-
-        // Crear tabla
-        GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
-        gestor.crearObjeto(bd, tablaUsuarios);
-
-        // Registrar en objetos_bd_franquicia
-        objetoBDRepository.guardarObjetoBD(tablaUsuarios);
-        objetoBDRepository.guardarObjetoEnMongo(tablaUsuarios);
-
-        // Insertar el usuario creador
-        if (bd.getTipo().toString().equals("POSTGRESQL")) {
-            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
-                String insertSQL = """
-                INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
-                VALUES (?, ?, ?, ?)
-            """;
-                PreparedStatement stmt = conn.prepareStatement(insertSQL);
-                stmt.setInt(1, creador.getId());
-                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
-                stmt.setString(3, creador.getPasswordHash());
-                stmt.setInt(4, 1); // es admin
-                stmt.executeUpdate();
-            }
-        } else {
-            try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-                String insertSQL = """
-                INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
-                VALUES (?, ?, ?, ?)
-            """;
-                PreparedStatement stmt = conn.prepareStatement(insertSQL);
-                stmt.setInt(1, creador.getId());
-                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
-                stmt.setString(3, creador.getPasswordHash());
-                stmt.setInt(4, 1); // es admin
-                stmt.executeUpdate();
-            }
-        }
-    }
-
-    private int preguntarEnQueBDCrearUsuarios(int idFranquicia) {
-        List<BaseDatosFranquicia> bds = baseDatosRepository.buscarPorFranquicia(idFranquicia);
-
-        if (bds.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay bases de datos disponibles para esta franquicia.", "Error", JOptionPane.ERROR_MESSAGE);
-            return -1;  // O algún valor que indique error
-        }
-
-        // Construir un arreglo con nombres legibles para mostrar
-        String[] opciones = new String[bds.size()];
-        for (int i = 0; i < bds.size(); i++) {
-            opciones[i] = bds.get(i).getNombreBD() + " (" + bds.get(i).getTipo() + ")";
-        }
-
-        String mensaje = "Antes de continuar debes crear la tabla obligatoria 'usuarios'.\n"
-                + "Selecciona en qué base de datos deseas crearla:";
-
-        String seleccion = (String) JOptionPane.showInputDialog(
-                null,
-                mensaje,
-                "Seleccionar base de datos",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                opciones,
-                opciones[0]
-        );
-
-        if (seleccion == null) {
-            // Usuario canceló o cerró el diálogo
-            return -1;
-        }
-
-        // Buscar el índice seleccionado para devolver el id de la BD
-        for (int i = 0; i < opciones.length; i++) {
-            if (opciones[i].equals(seleccion)) {
-                return bds.get(i).getId();
-            }
-        }
-
-        return -1; // No se encontró la selección
-    }
 
 }

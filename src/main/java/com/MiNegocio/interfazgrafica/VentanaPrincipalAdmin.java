@@ -6,6 +6,7 @@ import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.repository.impl.BaseDatosRepositoryImpl;
 import com.MiNegocio.configuracioncentral.repository.impl.ObjetoBDRepositoryImpl;
 import com.MiNegocio.configuracioncentral.utils.PanelCrearTabla;
+import com.MiNegocio.configuracioncentral.utils.PanelReportesMain;
 import com.MiNegocio.configuracioncentral.utils.PanelSelectorCargaYConsulta;
 import java.awt.CardLayout;
 import java.awt.Image;
@@ -44,12 +45,12 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         decorarBoton(btnCrearTablas);
         decorarBoton(btnConsultas);
         decorarBoton(btnMasBD);
-        decorarBoton(btnCerrarSesion);
+        decorarBoton(btnReportes);
         setIconoBoton(btnMain, "/main.png", 30, 30);
         setIconoBoton(btnCrearTablas, "/crear.png", 30, 30);
         setIconoBoton(btnConsultas, "/conf.png", 30, 30);
         setIconoBoton(btnMasBD, "/tabla-removebg-preview.png", 30, 30);
-        setIconoBoton(btnCerrarSesion, "/cerrar.png", 30, 30);
+        setIconoBoton(btnReportes, "/cerrar.png", 30, 30);
 
         cardLayout = (CardLayout) panelContenedor.getLayout();
 
@@ -64,8 +65,18 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         cardLayout.show(panelContenedor, "sesion");
         jPanel1.setVisible(false);
     }
+    String correo;
 
-    public void iniciarSesionExitosa() {
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public void iniciarSesionExitosa(String correo) {
+        this.correo = correo;
         jPanel1.setVisible(true);
         cardLayout.show(panelContenedor, "main");
         try {
@@ -80,7 +91,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnCerrarSesion = new javax.swing.JButton();
+        btnReportes = new javax.swing.JButton();
         btnCrearTablas = new javax.swing.JButton();
         btnConsultas = new javax.swing.JButton();
         btnMasBD = new javax.swing.JButton();
@@ -93,18 +104,18 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(32, 66, 118));
         jPanel1.setMaximumSize(new java.awt.Dimension(200, 550));
 
-        btnCerrarSesion.setBackground(new java.awt.Color(32, 66, 118));
-        btnCerrarSesion.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
-        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
-        btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cerrar.png"))); // NOI18N
-        btnCerrarSesion.setText("Cerrar Sesión");
-        btnCerrarSesion.setBorderPainted(false);
-        btnCerrarSesion.setFocusPainted(false);
-        btnCerrarSesion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnCerrarSesion.setOpaque(true);
-        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+        btnReportes.setBackground(new java.awt.Color(32, 66, 118));
+        btnReportes.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        btnReportes.setForeground(new java.awt.Color(255, 255, 255));
+        btnReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cerrar.png"))); // NOI18N
+        btnReportes.setText("Reportes");
+        btnReportes.setBorderPainted(false);
+        btnReportes.setFocusPainted(false);
+        btnReportes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnReportes.setOpaque(true);
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarSesionActionPerformed(evt);
+                btnReportesActionPerformed(evt);
             }
         });
 
@@ -112,7 +123,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnCrearTablas.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnCrearTablas.setForeground(new java.awt.Color(255, 255, 255));
         btnCrearTablas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/crear.png"))); // NOI18N
-        btnCrearTablas.setText("<html>Crear<br>Franquicias</html> ");
+        btnCrearTablas.setText(" Crear Tablas");
         btnCrearTablas.setBorderPainted(false);
         btnCrearTablas.setFocusPainted(false);
         btnCrearTablas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -127,7 +138,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnConsultas.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnConsultas.setForeground(new java.awt.Color(255, 255, 255));
         btnConsultas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/conf.png"))); // NOI18N
-        btnConsultas.setText("<html>Configurar bases<br>de datos</html> ");
+        btnConsultas.setText("<html>Carga de Datos<br>y <br>Consultas</html> ");
         btnConsultas.setBorderPainted(false);
         btnConsultas.setFocusPainted(false);
         btnConsultas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -174,7 +185,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnReportes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnMasBD, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnConsultas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -193,7 +204,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(btnMasBD, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
 
@@ -207,12 +218,11 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     BaseDatosFranquicia bv;
     RepositorioAutenticacion repo = new RepositorioAutenticacion();
-BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
-        ObjetoBDRepositoryImpl objetoRepo = new ObjetoBDRepositoryImpl();
-    
+    BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
+    ObjetoBDRepositoryImpl objetoRepo = new ObjetoBDRepositoryImpl();
+
 
     private void btnCrearTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearTablasActionPerformed
         panelContenedor.add(new PanelCrearTabla(bv.getId_franquicia(), this), "tabla");
@@ -220,7 +230,7 @@ BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
     }//GEN-LAST:event_btnCrearTablasActionPerformed
 
     private void btnConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultasActionPerformed
-        panelContenedor.add(new PanelSelectorCargaYConsulta(objetoRepo, bdRepo, bv.getId_franquicia(), NombreFran),"CargaConsulta");
+        panelContenedor.add(new PanelSelectorCargaYConsulta(objetoRepo, bdRepo, bv.getId_franquicia(), NombreFran), "CargaConsulta");
         cardLayout.show(panelContenedor, "CargaConsulta");
     }//GEN-LAST:event_btnConsultasActionPerformed
 
@@ -229,12 +239,14 @@ BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
     }//GEN-LAST:event_btnMasBDActionPerformed
 
     private void btnMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainActionPerformed
+
         cardLayout.show(panelContenedor, "main");
     }//GEN-LAST:event_btnMainActionPerformed
 
-    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-
-    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        panelContenedor.add(new PanelReportesMain(objetoRepo, bdRepo, bv.getId_franquicia(), NombreFran, correo), "Reporte");
+        cardLayout.show(panelContenedor, "Reporte");
+    }//GEN-LAST:event_btnReportesActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
@@ -298,11 +310,11 @@ BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnConsultas;
     private javax.swing.JButton btnCrearTablas;
     private javax.swing.JButton btnMain;
     private javax.swing.JButton btnMasBD;
+    private javax.swing.JButton btnReportes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelContenedor;
     // End of variables declaration//GEN-END:variables

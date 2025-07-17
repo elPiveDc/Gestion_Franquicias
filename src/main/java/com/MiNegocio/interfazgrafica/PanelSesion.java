@@ -134,7 +134,7 @@ public class PanelSesion extends javax.swing.JPanel {
         char[] passwordChars = Contrseña.getPassword(); // Obtener los caracteres seguros
         String password = new String(passwordChars);
         if (auth.autenticar(this,NombreFran, Correo, password)) {
-            ventanaPrincipalA.iniciarSesionExitosa();
+            ventanaPrincipalA.iniciarSesionExitosa(Correo);
         }
         
     }//GEN-LAST:event_btnIniciarSesionActionPerformed
