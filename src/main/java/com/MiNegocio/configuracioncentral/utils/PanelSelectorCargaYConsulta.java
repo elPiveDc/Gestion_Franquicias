@@ -1,6 +1,7 @@
 package com.MiNegocio.configuracioncentral.utils;
 
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
+import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.MiNegocio.configuracioncentral.repository.impl.BaseDatosRepositoryImpl;
 import com.MiNegocio.configuracioncentral.repository.impl.ObjetoBDRepositoryImpl;
 import com.MiNegocio.configuracioncentral.service.impl.ServicioCargaDatosImpl;
@@ -10,104 +11,137 @@ import com.MiNegocio.consultas.ConsultaIA;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class SelectorCargaYConsultaFrame extends JFrame {
+public class PanelSelectorCargaYConsulta extends JPanel {
 
     private final ObjetoBDRepositoryImpl objetoRepo;
     private final BaseDatosRepositoryImpl bdRepo;
-    private final int idBD;
-    private final String bdnombre;
-
-    private JComboBox<String> comboTablas;
-    private JComboBox<String> comboAccion; // Cargar o Consultar
-    private JComboBox<String> comboSubaccion;
-    private JButton btnEjecutar;
-    private List<ObjetoBDFranquicia> tablas;
-
     private final ServicioCargaDatosImpl servicioCarga;
 
-    public SelectorCargaYConsultaFrame(
-            ObjetoBDRepositoryImpl objetoRepo,
-            BaseDatosRepositoryImpl bdRepo,
-            int idBD,
-            String bdnombre
-    ) {
-        super("Módulo Carga / Consulta - " + bdnombre);
+    private final int idfran;
+    private final String bdnombre;
+
+    private JComboBox<String> comboBDs;
+    private JComboBox<String> comboTablas;
+    private JComboBox<String> comboAccion;
+    private JComboBox<String> comboSubaccion;
+    private JButton btnEjecutar;
+
+    private List<ObjetoBDFranquicia> tablas;
+    private final Map<String, Integer> mapaNombreIdBD = new HashMap<>();
+    private Integer idBDSeleccionada = null;
+
+    public PanelSelectorCargaYConsulta(ObjetoBDRepositoryImpl objetoRepo,
+                                       BaseDatosRepositoryImpl bdRepo,
+                                       int idfran,
+                                       String bdnombre) {
         this.objetoRepo = objetoRepo;
         this.bdRepo = bdRepo;
-        this.idBD = idBD;
+        this.idfran = idfran;
         this.bdnombre = bdnombre;
         this.servicioCarga = new ServicioCargaDatosImpl(objetoRepo, bdRepo);
-
         configurarUI();
         initComponents();
-        cargarTablas();
+        cargarBasesDatos();
         setupListeners();
-
-        setSize(520, 260);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
     }
 
     private void configurarUI() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     private void initComponents() {
+        setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder("Módulo Carga / Consulta - " + bdnombre));
+        setBackground(Color.WHITE);
+
+        comboBDs = new JComboBox<>();
         comboTablas = new JComboBox<>();
         comboAccion = new JComboBox<>(new String[]{"Registrar (Cargar datos)", "Consultar"});
         comboSubaccion = new JComboBox<>();
         btnEjecutar = new JButton("▶ Ejecutar");
 
+        JLabel lblBD = new JLabel("Selecciona Base de Datos:");
         JLabel lblTablas = new JLabel("Selecciona tabla:");
         JLabel lblAccion = new JLabel("Selecciona acción:");
         JLabel lblSubaccion = new JLabel("Tipo de operación:");
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 14);
+        lblBD.setFont(labelFont);
+        lblTablas.setFont(labelFont);
+        lblAccion.setFont(labelFont);
+        lblSubaccion.setFont(labelFont);
+
+        Font comboFont = new Font("Segoe UI", Font.PLAIN, 13);
+        comboBDs.setFont(comboFont);
+        comboTablas.setFont(comboFont);
+        comboAccion.setFont(comboFont);
+        comboSubaccion.setFont(comboFont);
+        btnEjecutar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnEjecutar.setBackground(new Color(60, 130, 200));
+        btnEjecutar.setForeground(Color.WHITE);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(lblTablas, gbc);
-
+        gbc.gridx = 0; gbc.gridy = 0;
+        add(lblBD, gbc);
         gbc.gridx = 1;
-        panel.add(comboTablas, gbc);
+        add(comboBDs, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(lblAccion, gbc);
-
+        gbc.gridx = 0; gbc.gridy = 1;
+        add(lblTablas, gbc);
         gbc.gridx = 1;
-        panel.add(comboAccion, gbc);
+        add(comboTablas, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add(lblSubaccion, gbc);
-
+        gbc.gridx = 0; gbc.gridy = 2;
+        add(lblAccion, gbc);
         gbc.gridx = 1;
-        panel.add(comboSubaccion, gbc);
+        add(comboAccion, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridx = 0; gbc.gridy = 3;
+        add(lblSubaccion, gbc);
+        gbc.gridx = 1;
+        add(comboSubaccion, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 4;
         gbc.gridwidth = 2;
-        panel.add(btnEjecutar, gbc);
+        add(btnEjecutar, gbc);
+    }
 
-        add(panel);
+    private void cargarBasesDatos() {
+        try {
+            var listaBDs = bdRepo.obtenerPorFranquicia(idfran); // Asegúrate que este método devuelve todas las BDs necesarias
+            comboBDs.removeAllItems();
+            mapaNombreIdBD.clear();
+
+            for (BaseDatosFranquicia bd : listaBDs) {
+                comboBDs.addItem(bd.getNombreBD());
+                mapaNombreIdBD.put(bd.getNombreBD(), bd.getId());
+            }
+
+            if (!listaBDs.isEmpty()) {
+                comboBDs.setSelectedIndex(0);
+                idBDSeleccionada = mapaNombreIdBD.get(comboBDs.getSelectedItem());
+                cargarTablas(); // Cargar tablas para la primera base de datos
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar bases de datos: " + ex.getMessage());
+        }
     }
 
     private void cargarTablas() {
-        tablas = objetoRepo.listarObjetosPorBD(idBD);
+        if (idBDSeleccionada == null) return;
+        tablas = objetoRepo.listarObjetosPorBD(idBDSeleccionada);
         comboTablas.removeAllItems();
 
-        if (tablas.isEmpty()) {
+        if (tablas == null || tablas.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay tablas disponibles aún.", "Información", JOptionPane.INFORMATION_MESSAGE);
             btnEjecutar.setEnabled(false);
         } else {
@@ -119,8 +153,18 @@ public class SelectorCargaYConsultaFrame extends JFrame {
     }
 
     private void setupListeners() {
+        comboBDs.addActionListener(e -> {
+            String seleccion = (String) comboBDs.getSelectedItem();
+            if (seleccion != null) {
+                idBDSeleccionada = mapaNombreIdBD.get(seleccion);
+                cargarTablas();
+            }
+        });
+
         comboAccion.addActionListener(e -> actualizarSubacciones());
+
         btnEjecutar.addActionListener(this::onEjecutar);
+
         actualizarSubacciones();
     }
 
@@ -142,7 +186,6 @@ public class SelectorCargaYConsultaFrame extends JFrame {
         String nombreTabla = (String) comboTablas.getSelectedItem();
         String accion = (String) comboAccion.getSelectedItem();
         String subaccion = (String) comboSubaccion.getSelectedItem();
-
         ObjetoBDFranquicia seleccionada = buscarTablaPorNombre(nombreTabla);
 
         if (seleccionada == null) {
@@ -151,6 +194,7 @@ public class SelectorCargaYConsultaFrame extends JFrame {
         }
 
         try {
+            var bd = bdRepo.buscarPorId(idBDSeleccionada);
             if ("Registrar (Cargar datos)".equals(accion)) {
                 switch (subaccion) {
                     case "Manual" -> servicioCarga.cargarDesdeManual(seleccionada.getIdObjeto());
@@ -159,7 +203,6 @@ public class SelectorCargaYConsultaFrame extends JFrame {
                     default -> JOptionPane.showMessageDialog(this, "Método no válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                var bd = bdRepo.buscarPorId(idBD);
                 switch (subaccion) {
                     case "Consulta estructurada" -> new ConsultaEstructurada().consultar(bd, seleccionada);
                     case "Consulta por lenguaje natural (IA)" -> new ConsultaIA().consultar(bd, seleccionada);

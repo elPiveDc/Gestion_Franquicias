@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 
 import java.util.*;
+import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -61,7 +62,7 @@ public class ConstructorTablaInteractiva {
     }
 
     public static ObjetoBDFranquicia crearTablaInteractiva() throws Exception {
-        
+
         JFrame frame = new JFrame("Crear Tabla");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(700, 450);
@@ -179,4 +180,94 @@ public class ConstructorTablaInteractiva {
 
         return resultado[0]; // Puede ser null si se canceló
     }
+
+    public static JPanel crearPanelTablaInteractiva(long idBD,Consumer<ObjetoBDFranquicia> onTablaCreada) {
+        
+        JPanel panelPrincipal = new JPanel(new BorderLayout());
+
+        // Campo para el nombre de la tabla
+        JPanel nombrePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel label = new JLabel("Nombre de la tabla:");
+        JTextField nombreTablaField = new JTextField(30);
+        nombrePanel.add(label);
+        nombrePanel.add(nombreTablaField);
+
+        // Tabla
+        String[] columnNames = {"Nombre", "Tipo", "Restricciones"};
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        JTable tablaColumnas = new JTable(tableModel);
+
+        String[] tiposDatos = {"entero", "cadena", "decimal", "fecha"};
+        String[] restriccionesOpcionales = {"", "PRIMARY KEY", "NOT NULL", "UNIQUE"};
+
+        tablaColumnas.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JComboBox<>(tiposDatos)));
+        tablaColumnas.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox<>(restriccionesOpcionales)));
+
+        JScrollPane scrollPane = new JScrollPane(tablaColumnas);
+
+        // Botones
+        JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JButton btnAgregar = new JButton("Agregar Fila");
+        JButton btnEliminar = new JButton("Eliminar Fila");
+        JButton btnCrear = new JButton("Crear Tabla");
+        botonesPanel.add(btnAgregar);
+        botonesPanel.add(btnEliminar);
+        botonesPanel.add(btnCrear);
+
+        // Acciones
+        btnAgregar.addActionListener(e -> tableModel.addRow(new Object[]{"", tiposDatos[0], ""}));
+
+        btnEliminar.addActionListener(e -> {
+            int fila = tablaColumnas.getSelectedRow();
+            if (fila != -1) {
+                tableModel.removeRow(fila);
+            }
+        });
+
+        btnCrear.addActionListener(e -> {
+            String nombreTabla = nombreTablaField.getText().trim();
+            if (nombreTabla.isEmpty()) {
+                JOptionPane.showMessageDialog(panelPrincipal, "El nombre de la tabla es obligatorio.");
+                return;
+            }
+
+            List<Map<String, String>> columnasList = new ArrayList<>();
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                String nombre = Objects.toString(tableModel.getValueAt(i, 0), "").trim();
+                String tipo = Objects.toString(tableModel.getValueAt(i, 1), "").trim();
+                String restricciones = Objects.toString(tableModel.getValueAt(i, 2), "").trim();
+
+                if (nombre.isEmpty() || tipo.isEmpty()) {
+                    JOptionPane.showMessageDialog(panelPrincipal, "Nombre y tipo son obligatorios.");
+                    return;
+                }
+
+                Map<String, String> col = new HashMap<>();
+                col.put("nombre", nombre);
+                col.put("tipo", tipo);
+                col.put("restricciones", restricciones);
+                columnasList.add(col);
+            }
+
+            try {
+                ObjetoBDFranquicia tabla = new ObjetoBDFranquicia();
+                tabla.setNombreTabla(nombreTabla);
+                tabla.setTipoObjeto("TABLA");
+                tabla.setEsTablaUsuarios(false);
+                tabla.setFechaCreacion(new Date());
+
+                ObjectMapper mapper = new ObjectMapper();
+                tabla.setColumnas(mapper.writeValueAsString(columnasList));
+
+                // Llamamos al callback con el objeto ya creado
+                onTablaCreada.accept(tabla);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panelPrincipal, "Error al crear tabla: " + ex.getMessage());
+            }
+        });
+
+        return panelPrincipal;
+    }
+
 }

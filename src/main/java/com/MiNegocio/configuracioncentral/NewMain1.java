@@ -10,7 +10,6 @@ import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFac
 import com.MiNegocio.configuracioncentral.repository.impl.*;
 import com.MiNegocio.configuracioncentral.service.impl.*;
 import com.MiNegocio.configuracioncentral.utils.ConstructorTablaInteractiva;
-import com.MiNegocio.configuracioncentral.utils.SelectorCargaYConsultaFrame;
 
 import javax.swing.*;
 import java.time.LocalDateTime;
@@ -73,18 +72,12 @@ public class NewMain1 {
         AutenticadorFranquicia auth = new AutenticadorFranquicia();
         boolean exito = auth.autenticar(nuevaFranquicia.getNombre(), nuevoUsuario.getCorreo(), nuevoUsuario.getPasswordHash());
 
-        SwingUtilities.invokeLater(() -> {
-            new SelectorCargaYConsultaFrame(objetoRepo, bdRepo, bdMySQL.getId(), bdMySQL.getNombreBD()).setVisible(true);
-        });
 
         if (exito && SesionFranquicia.sesionActiva()) {
             UsuarioFranquicia usuario = SesionFranquicia.obtenerUsuarioActual();
             System.out.println("\nAutenticación exitosa. Es administrador: " + usuario.isEsAdmin());
 
-            // Usar el frame mejorado de carga de datos
-            SwingUtilities.invokeLater(() -> {
-                new SelectorCargaYConsultaFrame(objetoRepo, bdRepo, bdMySQL.getId(), bdMySQL.getNombreBD()).setVisible(true);
-            });
+            
 
         } else {
             System.out.println("\nFalló la autenticación.");

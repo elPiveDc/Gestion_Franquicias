@@ -1,21 +1,47 @@
+//UWU
+
 package com.MiNegocio.interfazgrafica;
 
+import com.MiNegocio.configuracioncentral.domain.Franquicia;
+import com.MiNegocio.configuracioncentral.domain.Usuario;
 import java.awt.CardLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class VentanaPrincipalCreacion extends javax.swing.JFrame {
 
     CardLayout cardLayout;
 
-    String NombreFran;
+    private boolean franquiciaCreada = false;
 
-    public String getNombreFran() {
-        return NombreFran;
+    private boolean usuarioCreado = false;
+
+    public boolean isUsuarioCreado() {
+        return usuarioCreado;
     }
 
-    public void setNombreFran(String NombreFran) {
-        this.NombreFran = NombreFran;
+    public void setUsuarioCreado(boolean creado) {
+        this.usuarioCreado = creado;
+    }
+
+    private Usuario usuarioActual;
+    private Franquicia franquiciaActual;
+
+    public void setUsuarioActual(Usuario usuario) {
+        this.usuarioActual = usuario;
+    }
+
+    public Usuario getUsuarioActual() {
+        return usuarioActual;
+    }
+
+    public void setFranquiciaActual(Franquicia franquicia) {
+        this.franquiciaActual = franquicia;
+    }
+
+    public Franquicia getFranquiciaActual() {
+        return franquiciaActual;
     }
 
     public VentanaPrincipalCreacion() {
@@ -23,27 +49,26 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
         decorarBoton(btnMain);
+        decorarBoton(btnCrearUsuario);
         decorarBoton(btnCrearFranquicia);
-        decorarBoton(btnConfBD);
         decorarBoton(btnObjetos);
         decorarBoton(btnCerrarSesion);
         setIconoBoton(btnMain, "/main.png", 30, 30);
-        setIconoBoton(btnCrearFranquicia, "/crear.png", 30, 30);
-        setIconoBoton(btnConfBD, "/conf.png", 30, 30);
+        setIconoBoton(btnCrearUsuario, "/crear.png", 30, 30);
+        setIconoBoton(btnCrearFranquicia, "/conf.png", 30, 30);
         setIconoBoton(btnObjetos, "/tabla-removebg-preview.png", 30, 30);
         setIconoBoton(btnCerrarSesion, "/cerrar.png", 30, 30);
 
-
         cardLayout = (CardLayout) panelContenedor.getLayout();
 
-        // Carga los paneles externos para caragada y subida de datos
-        panelContenedor.add(new CrearUsuario(), "Usuario");
-        panelContenedor.add(new PanelCrearFranquicia(), "crearFranquicia");
-        panelContenedor.add(new PanelConfBD(), "confBD");
-        
+        // Carga los paneles externos para caragada y subida de datos - Paneles necesarios
+        //Proximo panel con menu de creación
+        panelContenedor.add(new PanelMain(), "main");
+        panelContenedor.add(new PanelCrearUsuario(this), "crearUsuario"); //Primer panel, creación de Usuario obligatoria antes de pasar al siguiente
+        panelContenedor.add(new PanelObjetos(), "objetos"); //Configurar las BDS a crear
 
-        cardLayout.show(panelContenedor, "crearFranquicia");
-        jPanel1.setVisible(false);
+        cardLayout.show(panelContenedor, "main");
+        jPanel1.setVisible(true);
     }
 
     public void iniciarSesionExitosa() {
@@ -57,8 +82,8 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         btnCerrarSesion = new javax.swing.JButton();
+        btnCrearUsuario = new javax.swing.JButton();
         btnCrearFranquicia = new javax.swing.JButton();
-        btnConfBD = new javax.swing.JButton();
         btnObjetos = new javax.swing.JButton();
         btnMain = new javax.swing.JButton();
         panelContenedor = new javax.swing.JPanel();
@@ -84,11 +109,26 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
             }
         });
 
+        btnCrearUsuario.setBackground(new java.awt.Color(32, 66, 118));
+        btnCrearUsuario.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        btnCrearUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/crear.png"))); // NOI18N
+        btnCrearUsuario.setText("<html>Crear<br>Usuario</html> ");
+        btnCrearUsuario.setBorderPainted(false);
+        btnCrearUsuario.setFocusPainted(false);
+        btnCrearUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnCrearUsuario.setOpaque(true);
+        btnCrearUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearUsuarioActionPerformed(evt);
+            }
+        });
+
         btnCrearFranquicia.setBackground(new java.awt.Color(32, 66, 118));
         btnCrearFranquicia.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnCrearFranquicia.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrearFranquicia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/crear.png"))); // NOI18N
-        btnCrearFranquicia.setText("<html>Crear<br>Franquicias</html> ");
+        btnCrearFranquicia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/conf.png"))); // NOI18N
+        btnCrearFranquicia.setText("<html>Crear<br>Franquicia</html> ");
         btnCrearFranquicia.setBorderPainted(false);
         btnCrearFranquicia.setFocusPainted(false);
         btnCrearFranquicia.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -99,26 +139,11 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
             }
         });
 
-        btnConfBD.setBackground(new java.awt.Color(32, 66, 118));
-        btnConfBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
-        btnConfBD.setForeground(new java.awt.Color(255, 255, 255));
-        btnConfBD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/conf.png"))); // NOI18N
-        btnConfBD.setText("<html>Configurar bases<br>de datos</html> ");
-        btnConfBD.setBorderPainted(false);
-        btnConfBD.setFocusPainted(false);
-        btnConfBD.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnConfBD.setOpaque(true);
-        btnConfBD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConfBDActionPerformed(evt);
-            }
-        });
-
         btnObjetos.setBackground(new java.awt.Color(32, 66, 118));
         btnObjetos.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnObjetos.setForeground(new java.awt.Color(255, 255, 255));
         btnObjetos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabla-removebg-preview.png"))); // NOI18N
-        btnObjetos.setText("Objetos");
+        btnObjetos.setText("<html>Configuración y<br>BD</html> ");
         btnObjetos.setBorderPainted(false);
         btnObjetos.setFocusPainted(false);
         btnObjetos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -152,23 +177,23 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnObjetos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnConfBD, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnCrearFranquicia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnCrearFranquicia, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCrearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(76, 76, 76)
+                .addGap(53, 53, 53)
                 .addComponent(btnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
+                .addComponent(btnCrearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnCrearFranquicia, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(btnConfBD, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(btnObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
@@ -183,37 +208,30 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
+        mostrarPanel("crearUsuario");
+    }//GEN-LAST:event_btnCrearUsuarioActionPerformed
+
     private void btnCrearFranquiciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearFranquiciaActionPerformed
-        cardLayout.show(panelContenedor, "crearFranquicia");
+        mostrarPanel("crearFranquicia");
     }//GEN-LAST:event_btnCrearFranquiciaActionPerformed
 
-    private void btnConfBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfBDActionPerformed
-        cardLayout.show(panelContenedor, "confBD");
-    }//GEN-LAST:event_btnConfBDActionPerformed
-
     private void btnObjetosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObjetosActionPerformed
-        cardLayout.show(panelContenedor, "objetos");
+        mostrarPanel("objetos");
     }//GEN-LAST:event_btnObjetosActionPerformed
 
     private void btnMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainActionPerformed
-        cardLayout.show(panelContenedor, "main");
+        mostrarPanel("main");
     }//GEN-LAST:event_btnMainActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new VentanaPrincipalCreacion().setVisible(true);
-        });
-    }
-    
     private void decorarBoton(javax.swing.JButton boton) {
         java.awt.Color colorNormal = new java.awt.Color(32, 66, 118);
         java.awt.Color colorHover = new java.awt.Color(25, 55, 100);
         java.awt.Color colorPressed = new java.awt.Color(25, 55, 100);
-
 
         boton.setBackground(colorNormal);
         boton.setForeground(java.awt.Color.WHITE);
@@ -227,14 +245,17 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 boton.setBackground(colorHover);
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 boton.setBackground(colorNormal);
             }
+
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 boton.setBackground(colorPressed);
             }
+
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 if (boton.getBounds().contains(evt.getPoint())) {
@@ -261,11 +282,29 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
         }
     }
 
+    public void mostrarPanel(String nombrePanel) {
+        if (nombrePanel.equals("crearFranquicia")) {
+            if (!usuarioCreado) {
+                JOptionPane.showMessageDialog(this, "Debes crear primero un usuario.");
+                return;
+            }
+
+            panelContenedor.add(new PanelCrearFranquicia(this), "crearFranquicia");
+        }
+
+        if (nombrePanel.equals("objetos") && !franquiciaCreada) {
+            JOptionPane.showMessageDialog(this, "Debes crear una franquicia primero.");
+            return;
+        }
+
+        cardLayout.show(panelContenedor, nombrePanel);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JButton btnConfBD;
     private javax.swing.JButton btnCrearFranquicia;
+    private javax.swing.JButton btnCrearUsuario;
     private javax.swing.JButton btnMain;
     private javax.swing.JButton btnObjetos;
     private javax.swing.JPanel jPanel1;

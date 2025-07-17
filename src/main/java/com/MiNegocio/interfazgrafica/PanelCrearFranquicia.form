@@ -16,127 +16,69 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="230" pref="230" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="90" pref="90" max="-2" attributes="0"/>
-                      <Component id="txtNombreFranquicia" min="-2" pref="245" max="-2" attributes="0"/>
-                      <EmptySpace min="145" pref="145" max="-2" attributes="0"/>
-                      <Component id="txtContraseña" min="-2" pref="245" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="236" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="txtNombreFranquicia" min="-2" pref="245" max="-2" attributes="0"/>
+                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jComboBox1" min="-2" pref="245" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jComboBox1" min="-2" pref="245" max="-2" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="txtCorreoAdmin" min="-2" pref="245" max="-2" attributes="0"/>
+                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="chbVercontraseña2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtContraseñaVerificar" min="-2" pref="245" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
-                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
-                                      <Component id="chbVercontraseña1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="125" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btnLimpiar" min="-2" pref="120" max="-2" attributes="0"/>
-                                      <EmptySpace pref="30" max="32767" attributes="0"/>
-                                      <Component id="btnRegistrar" min="-2" pref="120" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="282" max="-2" attributes="0"/>
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="btnLimpiar" min="-2" pref="120" max="-2" attributes="0"/>
+                          <Component id="txtCorreoAdmin" pref="245" max="32767" attributes="0"/>
+                          <Component id="btnCrearFranquicia" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace pref="103" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="txtNombreFranquicia" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtContraseña" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtCorreoAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                      <Component id="chbVercontraseña1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="txtContraseñaVerificar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chbVercontraseña2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="txtCorreoAdmin" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnRegistrar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="93" max="32767" attributes="0"/>
-              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnLimpiar" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <Component id="btnCrearFranquicia" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="203" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -145,7 +87,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="36" style="0"/>
+          <Font name="Swis721 Lt BT" size="30" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Crear Nueva Franquicia"/>
       </Properties>
@@ -153,7 +95,7 @@
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Nombre de la Franquicia:"/>
       </Properties>
@@ -161,14 +103,14 @@
     <Component class="javax.swing.JTextField" name="txtNombreFranquicia">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Estado:"/>
       </Properties>
@@ -176,12 +118,13 @@
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
-            <StringItem index="0" value="Configurada"/>
-            <StringItem index="1" value="No Configurada"/>
+          <StringArray count="3">
+            <StringItem index="0" value="ACTIVA"/>
+            <StringItem index="1" value="INACTIVA"/>
+            <StringItem index="2" value="ELIMINADA"/>
           </StringArray>
         </Property>
       </Properties>
@@ -192,86 +135,36 @@
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Administrador (Correo):"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtCorreoAdmin">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel5">
+    <Component class="javax.swing.JButton" name="btnCrearFranquicia">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Confirmar contrase&#xf1;a:"/>
+        <Property name="text" type="java.lang.String" value="Crear Franquicia"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JPasswordField" name="txtContrase&#xf1;a">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel6">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Contrase&#xf1;a:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JPasswordField" name="txtContrase&#xf1;aVerificar">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnRegistrar">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Registrar"/>
-      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearFranquiciaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnLimpiar">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="20" style="0"/>
+          <Font name="Swis721 Lt BT" size="20" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Limpiar"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel7">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="24" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Mensaje de Validaci&#xf3;n"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="chbVercontrase&#xf1;a1">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="14" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Ver contrase&#xf1;a"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="chbVercontrase&#xf1;a2">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tw Cen MT" size="14" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Ver contrase&#xf1;a"/>
       </Properties>
     </Component>
   </SubComponents>

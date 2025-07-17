@@ -1,7 +1,10 @@
 package com.MiNegocio.interfazgrafica;
 
 import com.MiNegocio.accesousuarios.RepositorioAutenticacion;
+import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -28,6 +31,7 @@ public class BusquedaFranquicia extends javax.swing.JFrame {
     RepositorioAutenticacion repo = new RepositorioAutenticacion();
 
     @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -150,7 +154,6 @@ public class BusquedaFranquicia extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void btnBuscarFranquiciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarFranquiciaActionPerformed
 
         String nombreFranquicia = Franquicia.getText().trim();
