@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import javax.swing.JOptionPane;
 
 public class ConexionBDFactory {
 
@@ -36,6 +37,10 @@ public class ConexionBDFactory {
                 try {
                     if (conexion != null && !conexion.isClosed()) {
                         conexion.close();
+                        JOptionPane.showMessageDialog(null,
+                                "Conexión cerrada correctamente al apagar el sistema.",
+                                "Error",
+                                JOptionPane.INFORMATION_MESSAGE);
                         System.out.println("Conexión cerrada correctamente al apagar el sistema.");
                     }
                 } catch (SQLException e) {
@@ -44,12 +49,15 @@ public class ConexionBDFactory {
             }));
 
         } catch (IOException | SQLException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error al cargar configuración de la BD:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException("Error al cargar configuración de la BD", e);
         }
     }
 
     public ConexionBDFactory() {
-        // Evitar instanciación
     }
 
     public static Connection getConexion() throws SQLException {

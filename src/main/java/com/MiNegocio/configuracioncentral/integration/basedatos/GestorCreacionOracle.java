@@ -6,6 +6,7 @@ import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 
 public class GestorCreacionOracle implements GestorCreacionBD {
 
@@ -43,6 +44,10 @@ public class GestorCreacionOracle implements GestorCreacionBD {
             }
 
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error creando la base de datos y usuario:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException("Error creando usuario Oracle: " + e.getMessage(), e);
         }
     }

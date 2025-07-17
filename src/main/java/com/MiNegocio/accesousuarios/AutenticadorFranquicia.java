@@ -31,7 +31,7 @@ public class AutenticadorFranquicia {
         }
     }
 
-    public boolean autenticar(Component parent, String nombreFranquicia, String correo, String passwordHash) {
+    public boolean autenticar(Component parent, String nombreFranquicia, String correo, String password) {
         try {
             BaseDatosFranquicia bd = repo.obtenerBDUsuariosPorFranquicia(nombreFranquicia);
             
@@ -43,7 +43,7 @@ public class AutenticadorFranquicia {
                 return false;
             }
 
-            UsuarioFranquicia usuario = repo.verificarCredenciales(bd, correo, passwordHash);
+            UsuarioFranquicia usuario = repo.verificarCredenciales(bd, correo, password);
             if (usuario != null) {
                 
                 SesionFranquicia.iniciarSesion(usuario);
@@ -67,4 +67,5 @@ public class AutenticadorFranquicia {
             return false;
         }
     }
+    
 }

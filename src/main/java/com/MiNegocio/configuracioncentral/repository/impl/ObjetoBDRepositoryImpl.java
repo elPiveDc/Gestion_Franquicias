@@ -56,7 +56,6 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
 
             // Crea el documento principal para guardar
             Document doc = new Document()
-                    .append("id_objeto", objeto.getIdObjeto())
                     .append("id_bd", objeto.getIdBD())
                     .append("nombre_tabla", objeto.getNombreTabla())
                     .append("tipo_objeto", objeto.getTipoObjeto())
@@ -74,10 +73,12 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
 
     @Override
     public List<ObjetoBDFranquicia> listarObjetosPorBD(int idBD) {
+        
         List<ObjetoBDFranquicia> lista = new ArrayList<>();
         String sql = "SELECT * FROM objetos_bd_franquicia WHERE id_bd = ?";
 
-        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); 
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, idBD);
 
@@ -151,13 +152,19 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
     }
 
     private ObjetoBDFranquicia mapearObjeto(ResultSet rs) throws SQLException {
+        ResultSetMetaData meta = rs.getMetaData();
+        System.out.println("Columnas disponibles en el ResultSet:");
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            System.out.println("- " + meta.getColumnName(i));
+        }
+
         ObjetoBDFranquicia obj = new ObjetoBDFranquicia();
         obj.setIdObjeto(rs.getInt("id_objeto"));
         obj.setIdBD(rs.getInt("id_bd"));
         obj.setNombreTabla(rs.getString("nombre_tabla"));
         obj.setTipoObjeto(rs.getString("tipo_objeto"));
         obj.setEsTablaUsuarios(rs.getBoolean("es_tabla_usuarios"));
-        obj.setColumnas(rs.getString("columnas"));
+        obj.setColumnas((String) rs.getObject("columnas"));
         obj.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
         return obj;
     }

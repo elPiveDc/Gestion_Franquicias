@@ -80,4 +80,9 @@ public class ObjetoBDFranquicia {
                 + ", fechaCreacion=" + fechaCreacion
                 + '}';
     }
+
+    public String toString2() {
+        return getNombreTabla();
+    }
+
 }

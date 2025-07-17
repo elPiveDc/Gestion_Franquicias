@@ -6,6 +6,7 @@ import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 
 public class GestorCreacionPostgreSQL implements GestorCreacionBD {
 
@@ -27,8 +28,11 @@ public class GestorCreacionPostgreSQL implements GestorCreacionBD {
             stmt.executeUpdate(createUserSQL);
             stmt.executeUpdate(grantSQL);
 
-            System.out.println("Base de datos y usuario creados correctamente en PostgreSQL.");
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error creando la base de datos y usuario:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException(e.getMessage(), e);
         }
 

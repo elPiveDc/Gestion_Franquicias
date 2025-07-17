@@ -7,96 +7,125 @@ import com.MiNegocio.configuracioncentral.utils.SQLHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 
 public class ConsultaEstructurada {
 
-    public void consultar(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto, Scanner scanner) throws Exception {
-        System.out.println("\n--- Opciones de consulta para la tabla '" + objeto.getNombreTabla() + "' ---");
-        System.out.println("1. Ver todos los datos");
-        System.out.println("2. Filtrar por una columna");
-        System.out.println("3. Hacer JOIN con otra tabla");
-        System.out.print("Seleccione una opción: ");
-        int tipoConsulta = scanner.nextInt();
-        scanner.nextLine();
+    public void consultar(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
+        String[] opciones = {"Ver todos los datos", "Filtrar por una columna", "JOIN (no disponible)"};
 
-        if (bd.getTipo().toString().equals("POSTGRESQL")) {
-            
-            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
-                switch (tipoConsulta) {
-                    case 1 ->
-                        ejecutarConsultaSimple(conn, objeto, bd);
-                    case 2 ->
-                        ejecutarConsultaFiltrada(conn, objeto, bd, scanner);
-                    case 3 ->
-                        System.out.println("JOIN aún no implementado como módulo independiente.");
-                    default ->
-                        System.out.println("Opción inválida.");
-                }
-            }
+        int seleccion = JOptionPane.showOptionDialog(
+                null,
+                "Selecciona el tipo de consulta para la tabla '" + objeto.getNombreTabla() + "':",
+                "Consulta estructurada",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
 
-        } else {
-            try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-                switch (tipoConsulta) {
-                    case 1 ->
-                        ejecutarConsultaSimple(conn, objeto, bd);
-                    case 2 ->
-                        ejecutarConsultaFiltrada(conn, objeto, bd, scanner);
-                    case 3 ->
-                        System.out.println("JOIN aún no implementado como módulo independiente.");
-                    default ->
-                        System.out.println("Opción inválida.");
-                }
+        if (seleccion == -1) return;
+
+        try (Connection conn = bd.getTipo().toString().equals("POSTGRESQL")
+                ? ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())
+                : ConexionMultiBDFactory.getConexion(bd)) {
+
+            switch (seleccion) {
+                case 0 -> ejecutarConsultaSimple(conn, objeto, bd);
+                case 1 -> ejecutarConsultaFiltrada(conn, objeto, bd);
+                case 2 -> JOptionPane.showMessageDialog(null, "JOIN aún no implementado como módulo independiente.");
+                default -> JOptionPane.showMessageDialog(null, "Opción inválida.");
             }
         }
     }
 
     private void ejecutarConsultaSimple(Connection conn, ObjetoBDFranquicia objeto, BaseDatosFranquicia bd) throws Exception {
         String sql = SQLHelper.generarConsultaSimple(objeto.getNombreTabla(), bd.getTipo());
+
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-            mostrarResultados(rs);
+            mostrarResultadosEnTabla(rs, "Todos los datos de: " + objeto.getNombreTabla());
         }
     }
 
-    private void ejecutarConsultaFiltrada(Connection conn, ObjetoBDFranquicia objeto, BaseDatosFranquicia bd, Scanner scanner) throws Exception {
+    private void ejecutarConsultaFiltrada(Connection conn, ObjetoBDFranquicia objeto, BaseDatosFranquicia bd) throws Exception {
         JsonNode columnas = new ObjectMapper().readTree(objeto.getColumnas());
 
-        System.out.println("\n--- Columnas disponibles ---");
+        String[] nombresColumnas = new String[columnas.size()];
         for (int i = 0; i < columnas.size(); i++) {
-            System.out.println((i + 1) + ". " + columnas.get(i).get("nombre").asText());
+            nombresColumnas[i] = columnas.get(i).get("nombre").asText();
         }
 
-        System.out.print("Seleccione una columna para filtrar: ");
-        int colSeleccionada = scanner.nextInt();
-        scanner.nextLine();
+        String seleccion = (String) JOptionPane.showInputDialog(
+                null,
+                "Selecciona una columna para filtrar:",
+                "Filtrado",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                nombresColumnas,
+                nombresColumnas[0]
+        );
 
-        if (colSeleccionada < 1 || colSeleccionada > columnas.size()) {
-            System.out.println("Opción inválida.");
-            return;
-        }
+        if (seleccion == null) return;
 
-        String nombreColumna = columnas.get(colSeleccionada - 1).get("nombre").asText();
-        System.out.print("Ingrese el valor para '" + nombreColumna + "': ");
-        String valor = scanner.nextLine();
+        String valor = JOptionPane.showInputDialog(
+                null,
+                "Ingresa el valor para la columna '" + seleccion + "':",
+                "Valor de filtro",
+                JOptionPane.PLAIN_MESSAGE
+        );
 
-        String sql = SQLHelper.generarConsultaFiltrada(objeto.getNombreTabla(), List.of(nombreColumna), bd.getTipo());
+        if (valor == null || valor.isBlank()) return;
+
+        String sql = SQLHelper.generarConsultaFiltrada(objeto.getNombreTabla(), List.of(seleccion), bd.getTipo());
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, valor);
             ResultSet rs = stmt.executeQuery();
-            mostrarResultados(rs);
+            mostrarResultadosEnTabla(rs, "Resultados filtrados por: " + seleccion + " = " + valor);
         }
     }
 
-    private void mostrarResultados(ResultSet rs) throws Exception {
-        int columnas = rs.getMetaData().getColumnCount();
-        while (rs.next()) {
-            for (int i = 1; i <= columnas; i++) {
-                System.out.print(rs.getMetaData().getColumnLabel(i) + ": " + rs.getString(i) + " | ");
-            }
-            System.out.println();
+    private void mostrarResultadosEnTabla(ResultSet rs, String titulo) throws Exception {
+        ResultSetMetaData meta = rs.getMetaData();
+        int columnCount = meta.getColumnCount();
+
+        String[] columnNames = new String[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            columnNames[i - 1] = meta.getColumnLabel(i);
         }
+
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        while (rs.next()) {
+            String[] fila = new String[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                fila[i - 1] = rs.getString(i);
+            }
+            model.addRow(fila);
+        }
+
+        JTable tabla = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        tabla.setFillsViewportHeight(true);
+
+        // Estética moderna
+        tabla.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tabla.setRowHeight(24);
+        tabla.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+        JDialog dialog = new JDialog();
+        dialog.setTitle(titulo);
+        dialog.setModal(true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(scrollPane);
+        dialog.setSize(800, 400);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
     }
 }

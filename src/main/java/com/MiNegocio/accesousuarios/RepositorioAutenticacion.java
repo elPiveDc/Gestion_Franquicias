@@ -4,6 +4,7 @@ import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
 import com.MiNegocio.configuracioncentral.domain.TipoBD;
 import com.MiNegocio.configuracioncentral.factory.ConexionBDFactory;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
+import com.MiNegocio.configuracioncentral.utils.PasswordUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,20 +63,43 @@ public class RepositorioAutenticacion {
         }
     }
 
-    public UsuarioFranquicia verificarCredenciales(BaseDatosFranquicia bd, String correo, String passwordHash) throws Exception {
+    public UsuarioFranquicia verificarCredenciales(BaseDatosFranquicia bd, String correo, String password) throws Exception {
+        String sql = """
+        SELECT id_usuario, nombre_usuario, es_admin, password_hash
+        FROM usuarios
+        WHERE nombre_usuario = ?
+        """;
+        if ("POSTGRESQL".equals(bd.getTipo().toString())) {
+            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL",bd.getUrlConexion());
+                    PreparedStatement stmt = conn.prepareStatement(sql)) {
+                
+                stmt.setString(1, correo);
+                ResultSet rs = stmt.executeQuery();
 
-        if (bd.getTipo().toString() == "POSTGRESQL") {
+                if (rs.next()) {
+                    String hashEnBD = rs.getString("password_hash");
 
-            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
+                    if (PasswordUtils.verificar(password, hashEnBD)) {
+                        return new UsuarioFranquicia(
+                                rs.getInt("id_usuario"),
+                                rs.getString("nombre_usuario"),
+                                rs.getInt("es_admin") == 1
+                        );
+                    }
+                }
+            }
+        } else {
+            try (Connection conn = ConexionMultiBDFactory.getConexion(bd);
+                    PreparedStatement stmt = conn.prepareStatement(sql)) {
+                
+                stmt.setString(1, correo);
+                ResultSet rs = stmt.executeQuery();
 
-                String sql = construirSQLAutenticacion(bd.getTipo());
+                if (rs.next()) {
+                    String hashEnBD = rs.getString("password_hash");
 
-                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.setString(1, correo);
-                    stmt.setString(2, passwordHash);
-                    ResultSet rs = stmt.executeQuery();
-
-                    if (rs.next()) {
+                    // Aquí validamos la contraseña en Java con BCrypt
+                    if (PasswordUtils.verificar(password, hashEnBD)) {
                         return new UsuarioFranquicia(
                                 rs.getInt("id_usuario"),
                                 rs.getString("nombre_usuario"),
@@ -85,40 +109,6 @@ public class RepositorioAutenticacion {
                 }
             }
         }
-        try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-
-            String sql = construirSQLAutenticacion(bd.getTipo());
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, correo);
-                stmt.setString(2, passwordHash);
-                ResultSet rs = stmt.executeQuery();
-
-                if (rs.next()) {
-                    return new UsuarioFranquicia(
-                            rs.getInt("id_usuario"),
-                            rs.getString("nombre_usuario"),
-                            rs.getInt("es_admin") == 1
-                    );
-                }
-            }
-        }
         return null;
-    }
-
-    private String construirSQLAutenticacion(TipoBD tipoBD) {
-        // Misma consulta para todos los tipos por ahora
-        switch (tipoBD) {
-            case MYSQL:
-            case POSTGRESQL:
-            case ORACLE:
-                return """
-                       SELECT id_usuario, nombre_usuario, es_admin
-                       FROM usuarios
-                       WHERE nombre_usuario = ? AND password_hash = ?
-                       """;
-            default:
-                throw new UnsupportedOperationException("Tipo de BD no soportado: " + tipoBD);
-        }
     }
 }

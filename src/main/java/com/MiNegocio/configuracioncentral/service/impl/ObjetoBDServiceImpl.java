@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class ObjetoBDServiceImpl implements ObjetoBDService {
 
@@ -39,7 +40,7 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
     @Override
     public void crearObjeto(int idBD, ObjetoBDFranquicia objeto) throws Exception {
-        
+
         BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
 
         objeto.setFechaCreacion(new Date());
@@ -55,19 +56,22 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
             // Crear la tabla e insertar al creador
             crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
 
-            System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
+            JOptionPane.showMessageDialog(null,
+                    "La tabla 'usuarios' fue creada correctamente con el usuario inicial.",
+                    "CONFIRMACION",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
-        
+
         // Crear el objeto solicitado
         GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
-        
+
         gestor.crearObjeto(bd, objeto);
         objetoBDRepository.guardarObjetoBD(objeto);
         objetoBDRepository.guardarObjetoEnMongo(objeto);
     }
 
     public void crearObjetoConIA(int idBD, String consulta) throws Exception {
-        
+
         ObjetoBDFranquicia objeto = new ObjetoBDFranquicia();
         BaseDatosFranquicia bd = baseDatosRepository.buscarPorId(idBD);
 
@@ -86,18 +90,17 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
 
             System.out.println("La tabla 'usuarios' fue creada correctamente con el usuario inicial.");
         }
-        
-        String json = IAService.generarSQLDesdePregunta(consulta + 
-                "usa la confiiguracion de lengujae SQL para el tipo de bd: " + bd.getTipo());
+
+        String json = IAService.generarSQLDesdePregunta(consulta
+                + "usa la confiiguracion de lengujae SQL para el tipo de bd: " + bd.getTipo());
         objeto.setColumnas(json);
-        
+
         // Crear el objeto solicitado
         GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
         gestor.crearObjeto(bd, objeto);
         objetoBDRepository.guardarObjetoBD(objeto);
         objetoBDRepository.guardarObjetoEnMongo(objeto);
     }
-    
 
     private void crearTablaUsuariosPorDefecto(int idBD, Usuario creador) throws Exception {
 
@@ -159,15 +162,43 @@ public class ObjetoBDServiceImpl implements ObjetoBDService {
     private int preguntarEnQueBDCrearUsuarios(int idFranquicia) {
         List<BaseDatosFranquicia> bds = baseDatosRepository.buscarPorFranquicia(idFranquicia);
 
-        System.out.println("Antes de continuar debes crear la tabla obligatoria 'usuarios'.");
-        System.out.println("Selecciona en qué base de datos deseas crearla:");
-
-        for (int i = 0; i < bds.size(); i++) {
-            System.out.println((i + 1) + ". " + bds.get(i).getNombreBD() + " (" + bds.get(i).getTipo() + ")");
+        if (bds.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay bases de datos disponibles para esta franquicia.", "Error", JOptionPane.ERROR_MESSAGE);
+            return -1;  // O algún valor que indique error
         }
 
-        Scanner scanner = new Scanner(System.in);
-        int seleccion = scanner.nextInt();
-        return bds.get(seleccion - 1).getId();
+        // Construir un arreglo con nombres legibles para mostrar
+        String[] opciones = new String[bds.size()];
+        for (int i = 0; i < bds.size(); i++) {
+            opciones[i] = bds.get(i).getNombreBD() + " (" + bds.get(i).getTipo() + ")";
+        }
+
+        String mensaje = "Antes de continuar debes crear la tabla obligatoria 'usuarios'.\n"
+                + "Selecciona en qué base de datos deseas crearla:";
+
+        String seleccion = (String) JOptionPane.showInputDialog(
+                null,
+                mensaje,
+                "Seleccionar base de datos",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]
+        );
+
+        if (seleccion == null) {
+            // Usuario canceló o cerró el diálogo
+            return -1;
+        }
+
+        // Buscar el índice seleccionado para devolver el id de la BD
+        for (int i = 0; i < opciones.length; i++) {
+            if (opciones[i].equals(seleccion)) {
+                return bds.get(i).getId();
+            }
+        }
+
+        return -1; // No se encontró la selección
     }
+
 }

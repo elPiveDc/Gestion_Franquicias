@@ -1,16 +1,11 @@
 package com.MiNegocio.configuracioncentral.factory;
 
 import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Collections;
 import java.util.Properties;
+import javax.swing.JOptionPane;
 
 public class ConexionMultiBDFactory {
 
@@ -21,10 +16,18 @@ public class ConexionMultiBDFactory {
                 .getClassLoader()
                 .getResourceAsStream("config.properties")) {
             if (input == null) {
+                JOptionPane.showMessageDialog(null,
+                    "No se pudo encontrar config.properties:\n",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
                 throw new RuntimeException("No se pudo encontrar config.properties");
             }
             props.load(input);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error cargando config.properties:\n" + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             throw new RuntimeException("Error cargando config.properties", e);
         }
     }
@@ -38,6 +41,11 @@ public class ConexionMultiBDFactory {
         String pass = props.getProperty(prefix + ".password");
 
         if (url == null || user == null) {
+            
+            JOptionPane.showMessageDialog(null,
+                    "No hay configuración para el tipo de BD: " + tipoBD,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE);
             throw new IllegalArgumentException("No hay configuración para el tipo de BD: " + tipoBD);
         }
 
@@ -53,6 +61,10 @@ public class ConexionMultiBDFactory {
                 break;
 
             default:
+                JOptionPane.showMessageDialog(null,
+                    "Tipo de BD no soportado: " + prefix,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE);
                 throw new IllegalArgumentException("Tipo de BD no soportado: " + prefix);
         }
 
@@ -66,6 +78,10 @@ public class ConexionMultiBDFactory {
         String pass = props.getProperty(prefix + ".password");
 
         if (url == null || user == null) {
+            JOptionPane.showMessageDialog(null,
+                    "No hay configuración para el tipo de BD: " + tipoBD,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE);
             throw new IllegalArgumentException("No hay configuración para el tipo de BD: " + tipoBD);
         }
 
@@ -81,6 +97,10 @@ public class ConexionMultiBDFactory {
                 break;
 
             default:
+                JOptionPane.showMessageDialog(null,
+                    "Tipo de BD no soportado: " + prefix,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE);
                 throw new IllegalArgumentException("Tipo de BD no soportado: " + prefix);
         }
 
@@ -105,6 +125,10 @@ public class ConexionMultiBDFactory {
                 Class.forName("org.postgresql.Driver");
                 break;
             default:
+                JOptionPane.showMessageDialog(null,
+                    "Tipo de BD no soportado: " + tipo,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE);
                 throw new IllegalArgumentException("Tipo de BD no soportado: " + tipo);
         }
 

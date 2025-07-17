@@ -5,146 +5,103 @@ import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import com.MiNegocio.configuracioncentral.utils.SQLHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.List;
-import java.util.Scanner;
 
 public class CargadorDatosManual implements CargadorDatos {
 
     @Override
     public void cargar(BaseDatosFranquicia bd, String nombreTabla, Object columnasData) throws Exception {
-
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode columnasArray;
 
-        // Determinar si el origen es String o List
         if (columnasData instanceof String) {
-            ObjectMapper mapper = new ObjectMapper();
             columnasArray = mapper.readTree((String) columnasData);
         } else if (columnasData instanceof List) {
-            ObjectMapper mapper = new ObjectMapper();
             columnasArray = mapper.valueToTree(columnasData);
         } else {
             throw new IllegalArgumentException("Formato de columnas no reconocido");
         }
 
-        Scanner scanner = new Scanner(System.in);
+        // Crear ventana principal
+        JFrame frame = new JFrame("Ingreso Manual de Datos - " + nombreTabla);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 400);
+        frame.setLocationRelativeTo(null);
 
-        if (bd.getTipo().toString().equals("POSTGRESQL")) {
-
-            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
-                boolean continuar = true;
-
-                while (continuar) {
-                    System.out.print("\n¿Deseas insertar una nueva fila? (s/n): ");
-                    String respuesta = scanner.nextLine().trim().toLowerCase();
-                    if (!respuesta.equals("s")) {
-                        continuar = false;
-                        break;
-                    }
-
-                    String insertSQL = SQLHelper.generarInsertSQL(nombreTabla, columnasArray.toString(), bd.getTipo());
-
-                    try (PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
-                        System.out.println("\n--- Ingreso de datos manual para tabla '" + nombreTabla + "' ---");
-
-                        for (int i = 0; i < columnasArray.size(); i++) {
-                            JsonNode columna = columnasArray.get(i);
-                            String nombre = columna.get("nombre").asText();
-                            String tipo = columna.get("tipo").asText();
-
-                            System.out.print("Ingrese valor para '" + nombre + "': ");
-                            String valor = scanner.nextLine();
-
-                            if (valor.trim().isEmpty()) {
-                                stmt.setNull(i + 1, Types.NULL);
-                                continue;
-                            }
-
-                            switch (tipo.toLowerCase()) {
-                                case "entero":
-                                    stmt.setInt(i + 1, Integer.parseInt(valor));
-                                    break;
-                                case "decimal":
-                                    stmt.setDouble(i + 1, Double.parseDouble(valor));
-                                    break;
-                                case "fecha":
-                                    stmt.setDate(i + 1, java.sql.Date.valueOf(valor)); // YYYY-MM-DD
-                                    break;
-                                case "cadena":
-                                default:
-                                    stmt.setString(i + 1, valor);
-                                    break;
-                            }
-                        }
-
-                        stmt.executeUpdate();
-                        System.out.println("Fila insertada correctamente.");
-                    } catch (Exception e) {
-                        System.err.println("Error durante carga de datos: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        } else {
-            try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-                boolean continuar = true;
-
-                while (continuar) {
-                    System.out.print("\n¿Deseas insertar una nueva fila? (s/n): ");
-                    String respuesta = scanner.nextLine().trim().toLowerCase();
-                    if (!respuesta.equals("s")) {
-                        continuar = false;
-                        break;
-                    }
-
-                    String insertSQL = SQLHelper.generarInsertSQL(nombreTabla, columnasArray.toString(), bd.getTipo());
-
-                    try (PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
-                        System.out.println("\n--- Ingreso de datos manual para tabla '" + nombreTabla + "' ---");
-
-                        for (int i = 0; i < columnasArray.size(); i++) {
-                            JsonNode columna = columnasArray.get(i);
-                            String nombre = columna.get("nombre").asText();
-                            String tipo = columna.get("tipo").asText();
-
-                            System.out.print("Ingrese valor para '" + nombre + "': ");
-                            String valor = scanner.nextLine();
-
-                            if (valor.trim().isEmpty()) {
-                                stmt.setNull(i + 1, Types.NULL);
-                                continue;
-                            }
-
-                            switch (tipo.toLowerCase()) {
-                                case "entero":
-                                    stmt.setInt(i + 1, Integer.parseInt(valor));
-                                    break;
-                                case "decimal":
-                                    stmt.setDouble(i + 1, Double.parseDouble(valor));
-                                    break;
-                                case "fecha":
-                                    stmt.setDate(i + 1, java.sql.Date.valueOf(valor)); // YYYY-MM-DD
-                                    break;
-                                case "cadena":
-                                default:
-                                    stmt.setString(i + 1, valor);
-                                    break;
-                            }
-                        }
-
-                        stmt.executeUpdate();
-                        System.out.println("Fila insertada correctamente.");
-                    } catch (Exception e) {
-                        System.err.println("Error durante carga de datos: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-            }
+        // Crear modelo de tabla
+        String[] nombresColumnas = new String[columnasArray.size()];
+        for (int i = 0; i < columnasArray.size(); i++) {
+            nombresColumnas[i] = columnasArray.get(i).get("nombre").asText();
         }
+
+        DefaultTableModel modeloTabla = new DefaultTableModel(nombresColumnas, 0);
+        JTable tabla = new JTable(modeloTabla);
+
+        JScrollPane scroll = new JScrollPane(tabla);
+        frame.add(scroll, BorderLayout.CENTER);
+
+        // Botones
+        JPanel panelBotones = new JPanel();
+
+        JButton btnAgregarFila = new JButton("Agregar fila");
+        JButton btnGuardar = new JButton("Guardar");
+
+        btnAgregarFila.addActionListener(e -> modeloTabla.addRow(new Object[nombresColumnas.length]));
+
+        btnGuardar.addActionListener(e -> {
+            try (
+                Connection conn = bd.getTipo().toString().equals("POSTGRESQL")
+                        ? ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())
+                        : ConexionMultiBDFactory.getConexion(bd)
+            ) {
+                String insertSQL = SQLHelper.generarInsertSQL(nombreTabla, columnasArray.toString(), bd.getTipo());
+
+                int filas = modeloTabla.getRowCount();
+                int insertadas = 0;
+
+                for (int i = 0; i < filas; i++) {
+                    try (PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
+                        for (int j = 0; j < columnasArray.size(); j++) {
+                            String tipo = columnasArray.get(j).get("tipo").asText().toLowerCase();
+                            Object valor = modeloTabla.getValueAt(i, j);
+
+                            if (valor == null || valor.toString().trim().isEmpty()) {
+                                stmt.setNull(j + 1, Types.NULL);
+                            } else {
+                                switch (tipo) {
+                                    case "entero" -> stmt.setInt(j + 1, Integer.parseInt(valor.toString()));
+                                    case "decimal" -> stmt.setDouble(j + 1, Double.parseDouble(valor.toString()));
+                                    case "fecha" -> stmt.setDate(j + 1, java.sql.Date.valueOf(valor.toString()));
+                                    default -> stmt.setString(j + 1, valor.toString());
+                                }
+                            }
+                        }
+                        stmt.executeUpdate();
+                        insertadas++;
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(frame, "Error al insertar fila " + (i + 1) + ": " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        ex.printStackTrace();
+                    }
+                }
+
+                JOptionPane.showMessageDialog(frame, "Se insertaron " + insertadas + " filas correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Error de conexión: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        });
+
+        panelBotones.add(btnAgregarFila);
+        panelBotones.add(btnGuardar);
+        frame.add(panelBotones, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
     }
 }

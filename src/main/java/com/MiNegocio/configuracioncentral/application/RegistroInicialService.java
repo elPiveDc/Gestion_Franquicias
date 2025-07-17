@@ -6,8 +6,10 @@ import com.MiNegocio.configuracioncentral.domain.Usuario;
 import com.MiNegocio.configuracioncentral.service.BaseDatosService;
 import com.MiNegocio.configuracioncentral.service.FranquiciaService;
 import com.MiNegocio.configuracioncentral.service.UsuarioService;
+import java.awt.Component;
 
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class RegistroInicialService {
 
@@ -16,8 +18,8 @@ public class RegistroInicialService {
     private final BaseDatosService baseDatosService;
 
     public RegistroInicialService(UsuarioService usuarioService,
-                                  FranquiciaService franquiciaService,
-                                  BaseDatosService baseDatosService) {
+            FranquiciaService franquiciaService,
+            BaseDatosService baseDatosService) {
         this.usuarioService = usuarioService;
         this.franquiciaService = franquiciaService;
         this.baseDatosService = baseDatosService;
@@ -35,5 +37,30 @@ public class RegistroInicialService {
         }
 
         System.out.println("Usuario y negocio registrados correctamente.");
+    }
+
+    public void registrarUsuarioYNegocio(Component parent, Usuario usuario, Franquicia franquicia, List<BaseDatosFranquicia> bases) {
+        try {
+            usuarioService.registrarUsuario(usuario);
+
+            franquicia.setPropietario(usuario);
+            franquiciaService.registrarFranquicia(usuario.getId(), franquicia);
+
+            for (BaseDatosFranquicia bd : bases) {
+                bd.setId(franquicia.getId());
+                baseDatosService.registrarBaseDatos(franquicia.getId(), bd);
+            }
+
+            JOptionPane.showMessageDialog(parent,
+                    "Usuario y franquicia registrados correctamente.",
+                    "Registro exitoso",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(parent,
+                    "Error al registrar el usuario o la franquicia: " + e.getMessage(),
+                    "Error de registro",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 }

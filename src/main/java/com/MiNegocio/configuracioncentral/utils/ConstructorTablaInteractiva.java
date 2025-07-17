@@ -4,6 +4,7 @@ import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 
 import java.util.*;
 import javax.swing.*;
@@ -12,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 public class ConstructorTablaInteractiva {
 
     public static ObjetoBDFranquicia crearTablaDesdeConsola(Scanner scanner) throws Exception {
-        
+
         ObjetoBDFranquicia tabla = new ObjetoBDFranquicia();
         List<Map<String, String>> columnas = new ArrayList<>();
 
@@ -58,11 +59,11 @@ public class ConstructorTablaInteractiva {
 
         return tabla;
     }
-    
+
     public static ObjetoBDFranquicia crearTablaInteractiva() throws Exception {
         JFrame frame = new JFrame("Crear Tabla");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(700, 450);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
@@ -73,14 +74,35 @@ public class ConstructorTablaInteractiva {
         nombrePanel.add(label);
         nombrePanel.add(nombreTablaField);
 
-        // Modelo de la tabla
-        String[] columnas = {"Nombre", "Tipo", "Restricciones"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnas, 0);
-        JTable tablaColumnas = new JTable(tableModel);
+        // Definición de columnas
+        String[] columnNames = {"Nombre", "Tipo", "Restricciones"};
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        JTable tablaColumnas = new JTable(tableModel) {
+            public boolean isCellEditable(int row, int column) {
+                return true;
+            }
+        };
+
+        // Opciones para ComboBoxes
+        String[] tiposDatos = {"entero", "cadena", "decimal", "fecha"};
+        String[] restriccionesOpcionales = {"", "PRIMARY KEY", "NOT NULL", "UNIQUE"};
+
+        // Asignar ComboBox como editor para columnas específicas
+        JComboBox<String> tipoComboBox = new JComboBox<>(tiposDatos);
+        tablaColumnas.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(tipoComboBox));
+
+        JComboBox<String> restriccionComboBox = new JComboBox<>(restriccionesOpcionales);
+        tablaColumnas.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(restriccionComboBox));
+
+        // Decoración visual moderna
+        tablaColumnas.setRowHeight(28);
+        tablaColumnas.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+        tablaColumnas.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        tablaColumnas.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(tablaColumnas);
 
-        // Botones de acción
-        JPanel botonesPanel = new JPanel();
+        // Panel de botones
+        JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         JButton btnAgregar = new JButton("Agregar Fila");
         JButton btnEliminar = new JButton("Eliminar Fila");
         JButton btnCrear = new JButton("Crear Tabla");
@@ -92,8 +114,8 @@ public class ConstructorTablaInteractiva {
         frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(botonesPanel, BorderLayout.SOUTH);
 
-        // Acciones de botones
-        btnAgregar.addActionListener(e -> tableModel.addRow(new Object[]{"", "", ""}));
+        // Acciones
+        btnAgregar.addActionListener(e -> tableModel.addRow(new Object[]{"", tiposDatos[0], ""}));
 
         btnEliminar.addActionListener(e -> {
             int filaSeleccionada = tablaColumnas.getSelectedRow();
@@ -113,9 +135,9 @@ public class ConstructorTablaInteractiva {
 
             List<Map<String, String>> columnasList = new ArrayList<>();
             for (int i = 0; i < tableModel.getRowCount(); i++) {
-                String nombre = ((String) tableModel.getValueAt(i, 0)).trim();
-                String tipo = ((String) tableModel.getValueAt(i, 1)).trim();
-                String restricciones = ((String) tableModel.getValueAt(i, 2)).trim();
+                String nombre = Objects.toString(tableModel.getValueAt(i, 0), "").trim();
+                String tipo = Objects.toString(tableModel.getValueAt(i, 1), "").trim();
+                String restricciones = Objects.toString(tableModel.getValueAt(i, 2), "").trim();
 
                 if (nombre.isEmpty() || tipo.isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Nombre y tipo son obligatorios en todas las filas.");
@@ -149,7 +171,7 @@ public class ConstructorTablaInteractiva {
 
         frame.setVisible(true);
 
-        // Esperar a que el usuario cierre la ventana
+        // Esperar hasta que se cierre la ventana
         while (frame.isDisplayable()) {
             Thread.sleep(100);
         }
