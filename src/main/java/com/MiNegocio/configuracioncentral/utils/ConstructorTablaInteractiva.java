@@ -61,6 +61,7 @@ public class ConstructorTablaInteractiva {
     }
 
     public static ObjetoBDFranquicia crearTablaInteractiva() throws Exception {
+        
         JFrame frame = new JFrame("Crear Tabla");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(700, 450);

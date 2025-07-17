@@ -35,6 +35,7 @@ public class NewMain1 {
         );
         RegistroInicialService registro = new RegistroInicialService(usuarioService, franquiciaService, bdService);
 
+        
         // ==== DATOS DE USUARIO Y FRANQUICIA ====
         Usuario nuevoUsuario = new Usuario("Lucía García", "lucia.garcia@email.com", "ClaveSegura123", LocalDateTime.now());
         Franquicia nuevaFranquicia = new Franquicia("Lucía Bebidas", LocalDateTime.now(), EstadoFranquicia.ACTIVA);
