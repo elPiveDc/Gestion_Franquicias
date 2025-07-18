@@ -1,5 +1,3 @@
-//UWU
-
 package com.MiNegocio.interfazgrafica;
 
 import com.MiNegocio.configuracioncentral.domain.Franquicia;
@@ -16,6 +14,8 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
     private boolean franquiciaCreada = false;
 
     private boolean usuarioCreado = false;
+    private Usuario usuarioActual;
+    private Franquicia franquiciaActual;
 
     public boolean isUsuarioCreado() {
         return usuarioCreado;
@@ -24,9 +24,6 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
     public void setUsuarioCreado(boolean creado) {
         this.usuarioCreado = creado;
     }
-
-    private Usuario usuarioActual;
-    private Franquicia franquiciaActual;
 
     public void setUsuarioActual(Usuario usuario) {
         this.usuarioActual = usuario;
@@ -64,8 +61,10 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
         // Carga los paneles externos para caragada y subida de datos - Paneles necesarios
         //Proximo panel con menu de creación
         panelContenedor.add(new PanelMain(), "main");
-        panelContenedor.add(new PanelCrearUsuario(this), "crearUsuario"); //Primer panel, creación de Usuario obligatoria antes de pasar al siguiente
-        panelContenedor.add(new PanelObjetos(), "objetos"); //Configurar las BDS a crear
+        //Primer panel, creación de Usuario obligatoria antes de pasar al siguiente
+        panelContenedor.add(new PanelCrearUsuario(this), "crearUsuario");
+        //Configurar las BDS a crear
+        panelContenedor.add(new PanelConfBD(this, 0, null), "confBD");
 
         cardLayout.show(panelContenedor, "main");
         jPanel1.setVisible(true);
@@ -74,6 +73,10 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
     public void iniciarSesionExitosa() {
         jPanel1.setVisible(true);
         cardLayout.show(panelContenedor, "main");
+    }
+    
+    public void cerrar(){
+        this.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -209,19 +212,19 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
-        mostrarPanel("crearUsuario");
+        mostrarPanel("crearUsuario",0,null);
     }//GEN-LAST:event_btnCrearUsuarioActionPerformed
 
     private void btnCrearFranquiciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearFranquiciaActionPerformed
-        mostrarPanel("crearFranquicia");
+        mostrarPanel("crearFranquicia",0, null);
     }//GEN-LAST:event_btnCrearFranquiciaActionPerformed
 
     private void btnObjetosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObjetosActionPerformed
-        mostrarPanel("objetos");
+        mostrarPanel("confBD",0, null);
     }//GEN-LAST:event_btnObjetosActionPerformed
 
     private void btnMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainActionPerformed
-        mostrarPanel("main");
+        mostrarPanel("main",0, null);
     }//GEN-LAST:event_btnMainActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -282,22 +285,32 @@ public class VentanaPrincipalCreacion extends javax.swing.JFrame {
         }
     }
 
-    public void mostrarPanel(String nombrePanel) {
-        if (nombrePanel.equals("crearFranquicia")) {
-            if (!usuarioCreado) {
-                JOptionPane.showMessageDialog(this, "Debes crear primero un usuario.");
-                return;
-            }
-
-            panelContenedor.add(new PanelCrearFranquicia(this), "crearFranquicia");
+    public void mostrarPanel(String nombrePanel, int fran, String nomfran) {
+        switch (nombrePanel) {
+            case "crearFranquicia":
+                if (!usuarioCreado) {
+                    JOptionPane.showMessageDialog(this, "Debes crear primero un usuario.");
+                    return;
+                }
+                if (!franquiciaCreada) {
+                    panelContenedor.add(new PanelCrearFranquicia(this), "crearFranquicia");
+                }
+                break;
+            case "confBD":
+                if (!usuarioCreado || !franquiciaCreada) {
+                    JOptionPane.showMessageDialog(this, "Debes crear primero un usuario y una franquicia.");
+                    return;
+                }
+                break;
         }
-
-        if (nombrePanel.equals("objetos") && !franquiciaCreada) {
-            JOptionPane.showMessageDialog(this, "Debes crear una franquicia primero.");
-            return;
+        if ("confBD".equals(nombrePanel)) {
+            panelContenedor.add(new PanelConfBD(this,fran,nomfran ), "confBD");
         }
-
         cardLayout.show(panelContenedor, nombrePanel);
+    }
+
+    public void setFranquiciaCreada(boolean creada) {
+        this.franquiciaCreada = creada;
     }
 
 

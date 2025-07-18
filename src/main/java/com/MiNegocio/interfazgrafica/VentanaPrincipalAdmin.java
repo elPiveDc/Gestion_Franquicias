@@ -50,18 +50,13 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         setIconoBoton(btnCrearTablas, "/crear.png", 30, 30);
         setIconoBoton(btnConsultas, "/conf.png", 30, 30);
         setIconoBoton(btnMasBD, "/tabla-removebg-preview.png", 30, 30);
-        setIconoBoton(btnReportes, "/cerrar.png", 30, 30);
+        setIconoBoton(btnReportes, "/reporte.png", 30, 30);
 
         cardLayout = (CardLayout) panelContenedor.getLayout();
 
-        // Carga los paneles externos para creacion usuario franquicia y bd
         panelContenedor.add(new PanelSesion(this), "sesion");
         panelContenedor.add(new PanelMain(), "main");
-
-        /*
-        panelContenedor.add(new Panel(), "SubirDatosYconsultas");
-        panelContenedor.add(new PanelConfBD(), "ConfiguracionBD");
-         */
+        
         cardLayout.show(panelContenedor, "sesion");
         jPanel1.setVisible(false);
     }
@@ -85,6 +80,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
             Logger.getLogger(VentanaPrincipalAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -203,9 +199,9 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
                 .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(btnMasBD, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(18, 18, 18)
+                .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
@@ -235,6 +231,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConsultasActionPerformed
 
     private void btnMasBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasBDActionPerformed
+        panelContenedor.add(new PanelConfBD(bdRepo.obtenerPorFranquicia(bv.getId_franquicia()), bv.getId_franquicia(), NombreFran), "objetos");
         cardLayout.show(panelContenedor, "objetos");
     }//GEN-LAST:event_btnMasBDActionPerformed
 
@@ -247,12 +244,6 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         panelContenedor.add(new PanelReportesMain(objetoRepo, bdRepo, bv.getId_franquicia(), NombreFran, correo), "Reporte");
         cardLayout.show(panelContenedor, "Reporte");
     }//GEN-LAST:event_btnReportesActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new VentanaPrincipalAdmin().setVisible(true);
-        });
-    }
 
     private void decorarBoton(javax.swing.JButton boton) {
         java.awt.Color colorNormal = new java.awt.Color(32, 66, 118);

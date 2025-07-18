@@ -1,5 +1,4 @@
 //UWU
-
 package com.MiNegocio.interfazgrafica;
 
 import com.MiNegocio.configuracioncentral.domain.EstadoFranquicia;
@@ -14,7 +13,18 @@ import javax.swing.JOptionPane;
 public class PanelCrearFranquicia extends javax.swing.JPanel {
 
     private VentanaPrincipalCreacion ventanaPrincipalCreacion;
+    private PanelConfBD PanelConfBD;
 
+    public PanelConfBD getPanelConfBD() {
+        return PanelConfBD;
+    }
+
+    public void setPanelConfBD(PanelConfBD PanelConfBD) {
+        this.PanelConfBD = PanelConfBD;
+    }
+    
+    
+    
     public PanelCrearFranquicia(VentanaPrincipalCreacion ventanaPrincipalCreacion) {
         this.ventanaPrincipalCreacion = ventanaPrincipalCreacion;
         initComponents();
@@ -152,13 +162,20 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
                     new FranquiciaRepositoryImpl(),
                     new UsuarioRepositoryImpl()
             );
+            
             franquiciaService.registrarFranquicia(usuario.getId(), nuevaFranquicia);
 
             ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
             JOptionPane.showMessageDialog(this, "Franquicia creada exitosamente.");
-
+            
+            
+            ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
+            ventanaPrincipalCreacion.setFranquiciaCreada(true);
+            ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
+            
+            
             // Cambiar al siguiente panel
-            ventanaPrincipalCreacion.mostrarPanel("configurarBD");
+            ventanaPrincipalCreacion.mostrarPanel("confBD", nuevaFranquicia.getId(), nuevaFranquicia.getNombre());
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al crear la franquicia: " + e.getMessage());

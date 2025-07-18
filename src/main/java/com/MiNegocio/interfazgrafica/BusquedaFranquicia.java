@@ -1,10 +1,8 @@
 package com.MiNegocio.interfazgrafica;
 
 import com.MiNegocio.accesousuarios.RepositorioAutenticacion;
-import com.MiNegocio.configuracioncentral.domain.BaseDatosFranquicia;
+import com.MiNegocio.configuracioncentral.utils.ValidacionTablaUsuariosService;
 import java.awt.Image;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -27,7 +25,6 @@ public class BusquedaFranquicia extends javax.swing.JFrame {
         agregarPlaceholder();
     }
 
-    //Buscador de Frnaquicia en BD Principal
     RepositorioAutenticacion repo = new RepositorioAutenticacion();
 
     @SuppressWarnings("unchecked")

@@ -23,6 +23,7 @@ com\MiNegocio\interfazgrafica\PanelCrearUsuario.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$4.class
 com\MiNegocio\accesousuarios\AutenticadorFranquicia.class
 com\MiNegocio\configuracioncentral\repository\impl\BaseDatosRepositoryImpl.class
+com\MiNegocio\interfazgrafica\PanelConfBD$4.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosFactory$1.class
 com\MiNegocio\accesousuarios\SesionFranquicia.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$1.class
@@ -47,17 +48,17 @@ com\MiNegocio\configuracioncentral\service\IAService.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin.class
 com\MiNegocio\configuracioncentral\utils\ConstructorTablaInteractiva$1.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatos.class
-com\MiNegocio\interfazgrafica\PanelObjetos.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$2.class
 com\MiNegocio\configuracioncentral\utils\PasswordUtils.class
+com\MiNegocio\interfazgrafica\PanelConfBD$3.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosJSON.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$6.class
 com\MiNegocio\configuracioncentral\domain\Usuario.class
 com\MiNegocio\consultas\ConsultaEstructurada.class
 com\MiNegocio\configuracioncentral\service\ObjetoBDService.class
-com\MiNegocio\interfazgrafica\PanelCrearUsuario$2.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$3.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosCSV.class
+com\MiNegocio\interfazgrafica\PanelConfBD$2.class
 com\MiNegocio\configuracioncentral\service\impl\ObjetoBDServiceImpl.class
 com\MiNegocio\configuracioncentral\domain\EstadoBD.class
 com\MiNegocio\configuracioncentral\domain\TipoBD.class
@@ -65,6 +66,7 @@ com\MiNegocio\configuracioncentral\service\UsuarioService.class
 com\MiNegocio\configuracioncentral\service\impl\FranquiciaServiceImpl.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalCreacion$5.class
 com\MiNegocio\configuracioncentral\service\impl\UsuarioServiceImpl.class
+com\MiNegocio\interfazgrafica\PanelConfBD$5.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosOracle.class
 com\MiNegocio\interfazgrafica\BusquedaFranquicia$1.class
 com\MiNegocio\configuracioncentral\repository\DescubirBD.class
