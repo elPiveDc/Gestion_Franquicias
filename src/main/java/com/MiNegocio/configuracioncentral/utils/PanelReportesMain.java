@@ -5,26 +5,17 @@ import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import com.MiNegocio.configuracioncentral.repository.impl.BaseDatosRepositoryImpl;
 import com.MiNegocio.configuracioncentral.repository.impl.ObjetoBDRepositoryImpl;
+import com.MiNegocio.configuracioncentral.service.ServicioPdf;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEvent;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.itextpdf.text.Font.*;
-
-import java.awt.Font.*;
+import com.mongodb.client.gridfs.model.GridFSFile;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
-
-import javax.swing.*;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -36,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.*;
+import org.bson.types.ObjectId;
+
 public class PanelReportesMain extends JPanel {
 
     private final ObjetoBDRepositoryImpl objetoRepo;
@@ -46,15 +40,17 @@ public class PanelReportesMain extends JPanel {
 
     private final JButton btnReporteCompleto;
     private final JButton btnReporteEspecifico;
+    private final JButton btnVerPdfs;
     private final JComboBox<String> comboBD;
     private final JComboBox<String> comboTablas;
     private final Map<String, Integer> mapaNombreIdBD;
 
     public PanelReportesMain(ObjetoBDRepositoryImpl objetoRepo,
-                             BaseDatosRepositoryImpl bdRepo,
-                             int idfran,
-                             String bdnombre,
-                             String correoUsuario) {
+            BaseDatosRepositoryImpl bdRepo,
+            int idfran,
+            String bdnombre,
+            String correoUsuario) {
+
         this.objetoRepo = objetoRepo;
         this.bdRepo = bdRepo;
         this.idfran = idfran;
@@ -67,6 +63,7 @@ public class PanelReportesMain extends JPanel {
 
         btnReporteCompleto = new JButton("Generar Reporte Completo");
         btnReporteEspecifico = new JButton("Generar Reporte Específico");
+        btnVerPdfs = new JButton("Ver PDFs ya Genereados");
         comboBD = new JComboBox<>();
         comboTablas = new JComboBox<>();
         mapaNombreIdBD = new HashMap<>();
@@ -81,11 +78,17 @@ public class PanelReportesMain extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        gbc.gridx = 0; gbc.gridy = 0; add(btnReporteCompleto, gbc);
-        gbc.gridy = 1; add(btnReporteEspecifico, gbc);
-        gbc.gridy = 2; add(comboBD, gbc);
-        gbc.gridy = 3; add(comboTablas, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(btnReporteCompleto, gbc);
+        gbc.gridy = 1;
+        add(btnReporteEspecifico, gbc);
+        gbc.gridy = 2;
+        add(comboBD, gbc);
+        gbc.gridy = 3;
+        add(comboTablas, gbc);
+        gbc.gridy = 4;
+        add(btnVerPdfs, gbc);
     }
 
     private void configurarUI() {
@@ -117,11 +120,15 @@ public class PanelReportesMain extends JPanel {
     private void cargarTablasPorBD() {
         comboTablas.removeAllItems();
         String nom = (String) comboBD.getSelectedItem();
-        if (nom == null) return;
+        if (nom == null) {
+            return;
+        }
         int idBD = mapaNombreIdBD.get(nom);
         List<ObjetoBDFranquicia> tablas = objetoRepo.listarObjetosPorBD(idBD);
         comboTablas.addItem("Todas las tablas");
-        for (ObjetoBDFranquicia obj : tablas) comboTablas.addItem(obj.getNombreTabla());
+        for (ObjetoBDFranquicia obj : tablas) {
+            comboTablas.addItem(obj.getNombreTabla());
+        }
     }
 
     private void setupListeners() {
@@ -136,16 +143,68 @@ public class PanelReportesMain extends JPanel {
                 generarReporte(false);
             }
         });
+        btnVerPdfs.addActionListener(e-> mostrarYDescargarPdfsGenerados());
     }
+    
+    private void mostrarYDescargarPdfsGenerados() {
+        ServicioPdf servicioPdf = new ServicioPdf(idfran);
+        try {
+            List<GridFSFile> archivos = servicioPdf.listarPdfsPorFranquicia();
+            if (archivos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron PDFs guardados.");
+                return;
+            }
+
+            String[] nombres = archivos.stream()
+                    .map(GridFSFile::getFilename)
+                    .toArray(String[]::new);
+
+            String seleccionado = (String) JOptionPane.showInputDialog(
+                    this,
+                    "Selecciona un PDF para descargar:",
+                    "PDFs guardados",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    nombres,
+                    nombres[0]);
+
+            if (seleccionado != null) {
+                GridFSFile archivo = archivos.stream()
+                        .filter(f -> f.getFilename().equals(seleccionado))
+                        .findFirst()
+                        .orElse(null);
+
+                if (archivo != null) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setSelectedFile(new File(seleccionado));
+                    fileChooser.setDialogTitle("Guardar PDF desde MongoDB");
+                    if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                        File destino = fileChooser.getSelectedFile();
+                        servicioPdf.descargarPdf((ObjectId) archivo.getObjectId(), destino);
+                        JOptionPane.showMessageDialog(this, "PDF descargado exitosamente:\n" + destino.getAbsolutePath());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al recuperar PDFs:\n" + e.getMessage());
+        } finally {
+            servicioPdf.cerrar();
+        }
+    }
+    
 
     private void generarReporte(boolean completo) {
+        ServicioPdf servicioPdf = new ServicioPdf(idfran);
+        ImagenCouchbaseUtil imagenUtil = new ImagenCouchbaseUtil();
         try {
             String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setSelectedFile(new File(completo ? "reporte_completo.pdf" : "reporte_especifico.pdf"));
             fileChooser.setDialogTitle("Guardar Reporte");
-            if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) return;
+            if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
 
             File destino = fileChooser.getSelectedFile();
             if (!destino.getName().toLowerCase().endsWith(".pdf")) {
@@ -158,6 +217,15 @@ public class PanelReportesMain extends JPanel {
 
             doc.open();
 
+            // Insertar la imagen de Couchbase (si existe)
+            Image imagen = imagenUtil.obtenerImagenPorIdFranquicia(idfran);
+            if (imagen != null) {
+                imagen.scaleToFit(100, 100); // tamaño máximo 100x100 px
+                imagen.setAlignment(Element.ALIGN_RIGHT);
+                doc.add(imagen);
+                doc.add(Chunk.NEWLINE);
+            }
+
             // Franquicia alineada izquierda
             Paragraph franquicia = new Paragraph(bdnombre, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20));
             franquicia.setAlignment(Element.ALIGN_LEFT);
@@ -169,27 +237,31 @@ public class PanelReportesMain extends JPanel {
 
             List<BaseDatosFranquicia> bases = bdRepo.obtenerPorFranquicia(idfran);
             for (BaseDatosFranquicia bd : bases) {
-                if (!completo && !bd.getNombreBD().equals(comboBD.getSelectedItem().toString())) continue;
+                if (!completo && !bd.getNombreBD().equals(comboBD.getSelectedItem().toString())) {
+                    continue;
+                }
 
                 Paragraph baseTitulo = new Paragraph("Base de Datos: " + bd.getNombreBD(),
                         FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
                 baseTitulo.setSpacingBefore(15f);
                 baseTitulo.setSpacingAfter(5f);
                 doc.add(baseTitulo);
-                // línea separadora ajustada arriba del contenido
+                // línea separadora arriba del contenido
                 doc.add(new LineSeparator(1f, 100f, BaseColor.GRAY, 1, 0));
 
                 List<ObjetoBDFranquicia> tablas = objetoRepo.listarObjetosPorBD(bd.getId());
                 for (ObjetoBDFranquicia tabla : tablas) {
                     if (!completo && !"Todas las tablas".equals(comboTablas.getSelectedItem().toString())
-                            && !tabla.getNombreTabla().equals(comboTablas.getSelectedItem())) continue;
+                            && !tabla.getNombreTabla().equals(comboTablas.getSelectedItem())) {
+                        continue;
+                    }
 
                     Paragraph tablaTitulo = new Paragraph(tabla.getNombreTabla(),
                             FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13));
                     tablaTitulo.setSpacingBefore(10f);
                     tablaTitulo.setSpacingAfter(3f);
                     doc.add(tablaTitulo);
-                    // línea ajustada antes de la tabla
+                    // línea antes de la tabla
                     doc.add(new LineSeparator(0.5f, 100f, BaseColor.LIGHT_GRAY, 1, 0));
 
                     PdfPTable tablaPdf = generarTablaContenido(bd, tabla.getNombreTabla());
@@ -208,19 +280,22 @@ public class PanelReportesMain extends JPanel {
 
             doc.close();
 
+            servicioPdf.guardarPdf(destino, destino.getName());
+
             JOptionPane.showMessageDialog(this, "Reporte guardado en:\n" + destino.getAbsolutePath());
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error generando PDF:\n" + ex.getMessage());
+        } finally {
+            imagenUtil.cerrar();
         }
     }
 
     private PdfPTable generarTablaContenido(BaseDatosFranquicia bd, String nombreTabla) {
         try (Connection conn = bd.getTipo().toString().equals("POSTGRESQL")
-                     ? ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())
-                     : ConexionMultiBDFactory.getConexion(bd);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM " + nombreTabla + " LIMIT 50")) {
+                ? ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())
+                : ConexionMultiBDFactory.getConexion(bd); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM " + nombreTabla + " LIMIT 50")) {
 
             ResultSetMetaData meta = rs.getMetaData();
             int cols = meta.getColumnCount();
@@ -251,6 +326,7 @@ public class PanelReportesMain extends JPanel {
     }
 
     static class PiePagina extends PdfPageEventHelper {
+
         Font font = FontFactory.getFont(FontFactory.HELVETICA_OBLIQUE, 9, BaseColor.GRAY);
 
         @Override

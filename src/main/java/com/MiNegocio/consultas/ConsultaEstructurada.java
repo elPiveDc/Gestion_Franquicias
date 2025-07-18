@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class ConsultaEstructurada {
 
     public void consultar(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
-        String[] opciones = {"Ver todos los datos", "Filtrar por una columna", "JOIN (no disponible)"};
+        String[] opciones = {"Ver todos los datos", "Filtrar por una columna"};
 
         int seleccion = JOptionPane.showOptionDialog(
                 null,

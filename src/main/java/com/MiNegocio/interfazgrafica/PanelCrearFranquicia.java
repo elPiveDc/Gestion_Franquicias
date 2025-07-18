@@ -6,6 +6,7 @@ import com.MiNegocio.configuracioncentral.domain.Franquicia;
 import com.MiNegocio.configuracioncentral.domain.Usuario;
 import com.MiNegocio.configuracioncentral.repository.impl.FranquiciaRepositoryImpl;
 import com.MiNegocio.configuracioncentral.repository.impl.UsuarioRepositoryImpl;
+import com.MiNegocio.configuracioncentral.service.ServicioSubidaImagenes;
 import com.MiNegocio.configuracioncentral.service.impl.FranquiciaServiceImpl;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
@@ -22,9 +23,7 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
     public void setPanelConfBD(PanelConfBD PanelConfBD) {
         this.PanelConfBD = PanelConfBD;
     }
-    
-    
-    
+
     public PanelCrearFranquicia(VentanaPrincipalCreacion ventanaPrincipalCreacion) {
         this.ventanaPrincipalCreacion = ventanaPrincipalCreacion;
         initComponents();
@@ -42,8 +41,6 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtNombreFranquicia = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         txtCorreoAdmin = new javax.swing.JTextField();
         btnCrearFranquicia = new javax.swing.JButton();
@@ -56,12 +53,6 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
         jLabel2.setText("Nombre de la Franquicia:");
 
         txtNombreFranquicia.setFont(new java.awt.Font("Swis721 Lt BT", 0, 20)); // NOI18N
-
-        jLabel3.setFont(new java.awt.Font("Swis721 Lt BT", 0, 20)); // NOI18N
-        jLabel3.setText("Estado:");
-
-        jComboBox1.setFont(new java.awt.Font("Swis721 Lt BT", 0, 20)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ACTIVA", "INACTIVA", "ELIMINADA" }));
 
         jLabel4.setFont(new java.awt.Font("Swis721 Lt BT", 0, 20)); // NOI18N
         jLabel4.setText("Administrador (Correo):");
@@ -90,15 +81,10 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
                 .addGap(236, 236, 236))
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtNombreFranquicia, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(70, 70, 70)))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNombreFranquicia, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(58, 58, 58)
@@ -124,12 +110,8 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombreFranquicia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCorreoAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLimpiar))
+                .addGap(73, 73, 73)
+                .addComponent(btnLimpiar)
                 .addGap(31, 31, 31)
                 .addComponent(btnCrearFranquicia)
                 .addContainerGap(203, Short.MAX_VALUE))
@@ -137,8 +119,8 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearFranquiciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearFranquiciaActionPerformed
+
         String nombreFranq = txtNombreFranquicia.getText().trim();
-        String estadoStr = (String) jComboBox1.getSelectedItem();
 
         if (nombreFranq.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor ingresa un nombre para la franquicia.");
@@ -152,9 +134,7 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
             return;
         }
 
-        EstadoFranquicia estado = EstadoFranquicia.valueOf(estadoStr);
-
-        Franquicia nuevaFranquicia = new Franquicia(nombreFranq, LocalDateTime.now(), estado);
+        Franquicia nuevaFranquicia = new Franquicia(nombreFranq, LocalDateTime.now(), EstadoFranquicia.ACTIVA);
         nuevaFranquicia.setPropietario(usuario);
 
         try {
@@ -162,18 +142,18 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
                     new FranquiciaRepositoryImpl(),
                     new UsuarioRepositoryImpl()
             );
-            
+
             franquiciaService.registrarFranquicia(usuario.getId(), nuevaFranquicia);
+            ServicioSubidaImagenes servicio = new ServicioSubidaImagenes();
+            servicio.iniciar(nuevaFranquicia.getId()); // Ya no se pide por pantalla
 
             ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
             JOptionPane.showMessageDialog(this, "Franquicia creada exitosamente.");
-            
-            
+
             ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
             ventanaPrincipalCreacion.setFranquiciaCreada(true);
             ventanaPrincipalCreacion.setFranquiciaActual(nuevaFranquicia);
-            
-            
+
             // Cambiar al siguiente panel
             ventanaPrincipalCreacion.mostrarPanel("confBD", nuevaFranquicia.getId(), nuevaFranquicia.getNombre());
 
@@ -187,10 +167,8 @@ public class PanelCrearFranquicia extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearFranquicia;
     private javax.swing.JButton btnLimpiar;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField txtCorreoAdmin;
     private javax.swing.JTextField txtNombreFranquicia;

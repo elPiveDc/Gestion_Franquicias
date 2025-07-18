@@ -1,6 +1,5 @@
 package com.MiNegocio.configuracioncentral.utils;
 
-import com.MiNegocio.configuracioncentral.application.RegistroInicialService;
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.factory.ConexionMultiBDFactory;
 import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFactory;
@@ -29,28 +28,23 @@ public class PanelCrearTabla extends JPanel {
     FranquiciaRepositoryImpl franquiciaRepo = new FranquiciaRepositoryImpl();
     BaseDatosRepositoryImpl bdRepo = new BaseDatosRepositoryImpl();
     ObjetoBDRepositoryImpl objetoRepo = new ObjetoBDRepositoryImpl();
-
     // ==== SERVICIOS ====
-    UsuarioServiceImpl usuarioService = new UsuarioServiceImpl(usuarioRepo);
-    FranquiciaServiceImpl franquiciaService = new FranquiciaServiceImpl(franquiciaRepo, usuarioRepo);
     BaseDatosServiceImpl bdService = new BaseDatosServiceImpl(bdRepo, franquiciaRepo);
     ObjetoBDServiceImpl objetoService = new ObjetoBDServiceImpl(
             objetoRepo, bdRepo, usuarioRepo, new ConexionMultiBDFactory(), new GestorObjetosFactory()
     );
     
-    private final VentanaPrincipalAdmin ventanaPrincipal;
     private final int parametro;
     private JTable tablaColumnas;
     private DefaultTableModel tableModel;
     private JTextField nombreTablaField;
 
     private JComboBox<String> comboBasesDatos;
-    private Map<String, Integer> mapaNombreIdBD = new HashMap<>();
+    private final Map<String, Integer> mapaNombreIdBD = new HashMap<>();
     private Integer idBaseDatosSeleccionada = null;
 
     public PanelCrearTabla(int parametro, VentanaPrincipalAdmin ventanaPrincipal) {
         this.parametro = parametro;
-        this.ventanaPrincipal = ventanaPrincipal;
         setLayout(new BorderLayout(10, 10));
         setBorder(new EmptyBorder(15, 15, 15, 15));
         setBackground(Color.WHITE);
@@ -97,6 +91,7 @@ public class PanelCrearTabla extends JPanel {
         String[] columnNames = {"Nombre", "Tipo", "Restricciones"};
         tableModel = new DefaultTableModel(null, columnNames);
         tablaColumnas = new JTable(tableModel) {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return true;
             }
@@ -119,9 +114,9 @@ public class PanelCrearTabla extends JPanel {
         // === Panel de botones ===
         JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         botonesPanel.setBackground(Color.WHITE);
-        JButton btnAgregar = crearBoton("➕ Agregar Fila");
-        JButton btnEliminar = crearBoton("🗑️ Eliminar Fila");
-        JButton btnCrear = crearBoton("✅ Crear Tabla");
+        JButton btnAgregar = crearBoton("Agregar Fila");
+        JButton btnEliminar = crearBoton("Eliminar Fila");
+        JButton btnCrear = crearBoton("Crear Tabla");
 
         botonesPanel.add(btnAgregar);
         botonesPanel.add(btnEliminar);
@@ -169,7 +164,7 @@ public class PanelCrearTabla extends JPanel {
             comboBasesDatos.setSelectedIndex(0);
             idBaseDatosSeleccionada = mapaNombreIdBD.get(comboBasesDatos.getSelectedItem());
 
-        } catch (Exception ex) {
+        } catch (HeadlessException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar bases de datos: " + ex.getMessage());
         }
     }
@@ -218,12 +213,12 @@ public class PanelCrearTabla extends JPanel {
 
             objetoService.crearObjeto(idBaseDatosSeleccionada, tabla);
 
-            JOptionPane.showMessageDialog(this, "✅ Tabla creada exitosamente.");
+            JOptionPane.showMessageDialog(this, "Tabla creada exitosamente.");
             nombreTablaField.setText("");
             tableModel.setRowCount(0);
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "❌ Error al crear tabla: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al crear tabla: " + ex.getMessage());
         }
     }
 
@@ -231,7 +226,7 @@ public class PanelCrearTabla extends JPanel {
         JButton btn = new JButton(texto);
         btn.setFocusPainted(false);
         btn.setBackground(new Color(60, 130, 200));
-        btn.setForeground(Color.WHITE);
+        btn.setForeground(Color.BLUE);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btn.setPreferredSize(new Dimension(140, 35));
         return btn;

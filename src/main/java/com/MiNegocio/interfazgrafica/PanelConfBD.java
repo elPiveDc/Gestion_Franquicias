@@ -110,6 +110,11 @@ public class PanelConfBD extends javax.swing.JPanel {
 
         cbTipoBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         cbTipoBD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MYSQL", "POSTGRESQL", "ORACLE" }));
+        cbTipoBD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbTipoBDMouseClicked(evt);
+            }
+        });
         cbTipoBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbTipoBDActionPerformed(evt);
@@ -257,16 +262,38 @@ public class PanelConfBD extends javax.swing.JPanel {
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         try {
             registrarBases(ListadeBases, idFranquicia);
-            JOptionPane.showMessageDialog(null,
-                    "Su(s) Base(s) de Dato Fueron Creada(s)",
-                    "CONFIRMACION",
-                    JOptionPane.OK_OPTION);
             if ("creacion".equals(vienecreacion)) {
+                UsuarioRepositoryImpl usuarioRepository = new UsuarioRepositoryImpl();
+
+                int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(idFranquicia);
+
+                // Obtener el usuario creador
+                Usuario creador = usuarioRepository.obtenerCreadorDeFranquicia(idFranquicia);
+
+                // Crear la tabla e insertar al creador
+                crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Su(s) base(s) de datos fue/ fueron creada(s) correctamente.\n"
+                        + "La tabla 'usuarios' fue creada correctamente con el usuario inicial.",
+                        "Confirmación",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                System.out.println("Usuario y negocio registrados correctamente.");
                 VentanaPrincipalAdmin v1 = new VentanaPrincipalAdmin();
                 v1.setLocationRelativeTo(null);
                 v1.setVisible(true);
                 v1.setNombreFran(nomfran);
                 ventanaPrincipal.cerrar();
+            } else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Su(s) base(s) de datos fue/ fueron creada(s) correctamente.",
+                        "Confirmación",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
             }
         } catch (Exception ex) {
             Logger.getLogger(PanelConfBD.class.getName()).log(Level.SEVERE, null, ex);
@@ -280,6 +307,10 @@ public class PanelConfBD extends javax.swing.JPanel {
     private void cbTipoBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoBDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbTipoBDActionPerformed
+
+    private void cbTipoBDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbTipoBDMouseClicked
+        //que extraiga mensajito jsdffjsyf
+    }//GEN-LAST:event_cbTipoBDMouseClicked
 
     public void llenarTablaDesdeLista(List<BaseDatosFranquicia> listaBDs, JTable tablaBDs) {
         try {
@@ -343,7 +374,7 @@ public class PanelConfBD extends javax.swing.JPanel {
 
         switch (tipoBD.toLowerCase()) {
             case "postgresql":
-                url = "jdbc:postgresql://localhost:5432/" + nombreBD;
+                url = "jdbc:postgresql://localhost:5432/" + nombreBD.toLowerCase();
                 break;
             case "mysql":
                 url = "jdbc:mysql://localhost:3306/" + nombreBD;
@@ -438,10 +469,11 @@ public class PanelConfBD extends javax.swing.JPanel {
     }
 
     private void crearTablaUsuariosPorDefecto(int idBD, Usuario creador) throws Exception {
-        BaseDatosRepositoryImpl baseDatosRepositoryImpl = new BaseDatosRepositoryImpl();
 
+        BaseDatosRepositoryImpl baseDatosRepositoryImpl = new BaseDatosRepositoryImpl();
         BaseDatosFranquicia bd = baseDatosRepositoryImpl.buscarPorId(idBD);
 
+        // Crear metadatos para la tabla "usuarios"
         ObjetoBDFranquicia tablaUsuarios = new ObjetoBDFranquicia();
         tablaUsuarios.setNombreTabla("usuarios");
         tablaUsuarios.setTipoObjeto("TABLA");
@@ -449,53 +481,56 @@ public class PanelConfBD extends javax.swing.JPanel {
         tablaUsuarios.setIdBD(idBD);
         tablaUsuarios.setFechaCreacion(new Date());
         tablaUsuarios.setColumnas("""
-        [
-          {"nombre":"id_usuario", "tipo":"entero", "restricciones":"PRIMARY KEY"},
-          {"nombre":"nombre_usuario", "tipo":"cadena", "restricciones":"NOT NULL"},
-          {"nombre":"password_hash", "tipo":"cadena", "restricciones":"NOT NULL"},
-          {"nombre":"es_admin", "tipo":"entero", "restricciones":"DEFAULT 1"}
-        ]
-        """);
+    [
+      {"nombre":"id_usuario", "tipo":"entero", "restricciones":"PRIMARY KEY"},
+      {"nombre":"nombre_usuario", "tipo":"cadena", "restricciones":"NOT NULL"},
+      {"nombre":"password_hash", "tipo":"cadena", "restricciones":"NOT NULL"},
+      {"nombre":"es_admin", "tipo":"entero", "restricciones":"DEFAULT 1"}
+    ]
+    """);
 
-        GestorObjetosFactory gestorFactory = new GestorObjetosFactory();
-
-        // Crear tabla
-        GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
-        gestor.crearObjeto(bd, tablaUsuarios);
-
+        // Guardar metadatos en las repos
         ObjetoBDRepositoryImpl objetoBDRepository = new ObjetoBDRepositoryImpl();
-
-        // Registrar en objetos_bd_franquicia
         objetoBDRepository.guardarObjetoBD(tablaUsuarios);
         objetoBDRepository.guardarObjetoEnMongo(tablaUsuarios);
 
-        // Insertar el usuario creador
-        if (bd.getTipo().toString().equals("POSTGRESQL")) {
-            try (Connection conn = ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())) {
-                String insertSQL = """
-                INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
-                VALUES (?, ?, ?, ?)
-            """;
-                PreparedStatement stmt = conn.prepareStatement(insertSQL);
-                stmt.setInt(1, creador.getId());
-                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
-                stmt.setString(3, creador.getPasswordHash());
-                stmt.setInt(4, 1); // es admin
-                stmt.executeUpdate();
-            }
+        // Crear la tabla en la base de datos
+        GestorObjetosFactory gestorFactory = new GestorObjetosFactory();
+        GestorObjetosBD gestor = gestorFactory.obtenerGestor(bd.getTipo());
+        gestor.crearObjeto(bd, tablaUsuarios);
+
+        // Determinar tipo de base de datos
+        String tipoBD = bd.getTipo().toString().toUpperCase();
+
+        // Construcción dinámica de SQL
+        String insertSQL;
+        boolean usaSecuenciaOracle = false;
+
+        if (tipoBD.equals("ORACLE")) {
+            insertSQL = """
+            INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
+            VALUES (?, ?, ?, ?)
+        """;
+            usaSecuenciaOracle = true;
         } else {
-            try (Connection conn = ConexionMultiBDFactory.getConexion(bd)) {
-                String insertSQL = """
-                INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
-                VALUES (?, ?, ?, ?)
-            """;
-                PreparedStatement stmt = conn.prepareStatement(insertSQL);
-                stmt.setInt(1, creador.getId());
-                stmt.setString(2, creador.getCorreo()); // o getNombre() si quieres nombre
-                stmt.setString(3, creador.getPasswordHash());
-                stmt.setInt(4, 1); // es admin
-                stmt.executeUpdate();
-            }
+            insertSQL = """
+            INSERT INTO usuarios (id_usuario, nombre_usuario, password_hash, es_admin)
+            VALUES (?, ?, ?, ?)
+        """;
+        }
+
+        // Obtener conexión
+        try (Connection conn = tipoBD.equals("POSTGRESQL")
+                ? ConexionMultiBDFactory.getConexion("POSTGRESQL", bd.getUrlConexion())
+                : ConexionMultiBDFactory.getConexion(bd)) {
+
+            PreparedStatement stmt = conn.prepareStatement(insertSQL);
+
+            stmt.setInt(1, creador.getId());
+            stmt.setString(2, creador.getCorreo());
+            stmt.setString(3, creador.getPasswordHash());
+            stmt.setInt(4, 1); // es admin
+            stmt.executeUpdate();
         }
     }
 
@@ -546,29 +581,10 @@ public class PanelConfBD extends javax.swing.JPanel {
 
     public void registrarBases(List<BaseDatosFranquicia> bases, int idFranquicia) throws Exception {
         BaseDatosRepositoryImpl baseDatosRepositoryImpl = new BaseDatosRepositoryImpl();
-        UsuarioRepositoryImpl usuarioRepository = new UsuarioRepositoryImpl();
-
         for (BaseDatosFranquicia bd : bases) {
             bd.setId(idFranquicia);
             baseDatosRepositoryImpl.guardar(bd, idFranquicia);
         }
-
-        if ("creacion".equals(vienecreacion)) {
-            int idBDSeleccionada = preguntarEnQueBDCrearUsuarios(idFranquicia);
-            // Obtener el usuario creador
-            Usuario creador = usuarioRepository.obtenerCreadorDeFranquicia(idFranquicia);
-
-            // Crear la tabla e insertar al creador
-            crearTablaUsuariosPorDefecto(idBDSeleccionada, creador);
-
-            JOptionPane.showMessageDialog(null,
-                    "La tabla 'usuarios' fue creada correctamente con el usuario inicial.",
-                    "CONFIRMACION",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-            System.out.println("Usuario y negocio registrados correctamente.");
-        }
-
     }
 
 

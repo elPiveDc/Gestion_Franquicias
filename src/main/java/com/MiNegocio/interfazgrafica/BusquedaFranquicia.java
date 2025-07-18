@@ -1,7 +1,6 @@
 package com.MiNegocio.interfazgrafica;
 
 import com.MiNegocio.accesousuarios.RepositorioAutenticacion;
-import com.MiNegocio.configuracioncentral.utils.ValidacionTablaUsuariosService;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
