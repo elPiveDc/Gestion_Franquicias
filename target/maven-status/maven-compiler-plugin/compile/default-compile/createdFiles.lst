@@ -23,6 +23,7 @@ com\MiNegocio\interfazgrafica\PanelCrearUsuario.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$4.class
 com\MiNegocio\accesousuarios\AutenticadorFranquicia.class
 com\MiNegocio\configuracioncentral\repository\impl\BaseDatosRepositoryImpl.class
+com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$7.class
 com\MiNegocio\interfazgrafica\PanelConfBD$4.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosFactory$1.class
 com\MiNegocio\accesousuarios\SesionFranquicia.class
@@ -55,9 +56,11 @@ com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosJSON.clas
 com\MiNegocio\configuracioncentral\factory\ConexionCouchbaseCloud.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$6.class
 com\MiNegocio\configuracioncentral\utils\ImagenCouchbaseUtil.class
+com\MiNegocio\interfazgrafica\PanelSesion$3.class
 com\MiNegocio\configuracioncentral\domain\Usuario.class
 com\MiNegocio\consultas\ConsultaEstructurada.class
 com\MiNegocio\configuracioncentral\service\ObjetoBDService.class
+com\MiNegocio\interfazgrafica\PanelCrearUsuario$2.class
 com\MiNegocio\interfazgrafica\VentanaPrincipalAdmin$3.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosCSV.class
 com\MiNegocio\interfazgrafica\PanelConfBD$2.class
@@ -83,7 +86,6 @@ com\MiNegocio\configuracioncentral\application\RegistroInicialService.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosManual.class
 com\MiNegocio\interfazgrafica\PanelSesion$1.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosPostgreSQL.class
-com\MiNegocio\interfazgrafica\VentanaPrincipalCreacion$6.class
 com\MiNegocio\configuracioncentral\domain\AuditoriaCarga.class
 com\MiNegocio\interfazgrafica\BusquedaFranquicia.class
 com\MiNegocio\configuracioncentral\integration\cargadatos\CargadorDatosFactory.class
@@ -95,9 +97,9 @@ com\MiNegocio\configuracioncentral\service\ServicioPdf.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosFactory.class
 com\MiNegocio\configuracioncentral\repository\ObjetoBDRepository.class
 com\MiNegocio\configuracioncentral\integration\basedatos\GestorCreacionPostgreSQL.class
-com\MiNegocio\interfazgrafica\PanelConfBD$6.class
 com\MiNegocio\configuracioncentral\utils\PanelCrearTabla$1.class
 com\MiNegocio\configuracioncentral\utils\PanelSelectorCargaYConsulta.class
+com\MiNegocio\interfazgrafica\PanelSesion$2.class
 com\MiNegocio\configuracioncentral\repository\FranquiciaRepository.class
 com\MiNegocio\configuracioncentral\utils\ConstructorTablaInteractiva.class
 com\MiNegocio\configuracioncentral\integration\objetosbd\GestorObjetosMySQL.class
