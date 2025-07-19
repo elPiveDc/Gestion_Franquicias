@@ -10,11 +10,11 @@ Aplicación de escritorio desarrollada en **Java (JDK 23)** con **Maven** y **Ap
 
 El sistema puede funcionar enteramente en tu máquina local si tienes instalados los siguientes servicios:
 
-* MySQL 8.0.42  (gestión central), aqui se deve ejecutar el sql de la BD Central (https://dev.mysql.com/downloads/installer/)
-* PostgreSQL 17.5 on x86_64-windows, compiled by msvc-19.43.34808, 64-bit 
-* Oracle Database 21c Express Edition Release 21.0.0.0.0 - Production
-* MongoDB 8.0.11 https://www.mongodb.com/try/download/community
-* Community Edition 7.6.2 build 3721 https://www.couchbase.com/downloads/
+* **MySQL** 8.0.42  (gestión central), aqui se deve ejecutar el sql de la BD Central (https://dev.mysql.com/downloads/installer/)
+* **PostgreSQL** 17.5 on x86_64-windows, compiled by msvc-19.43.34808, 64-bit 
+* **Oracle** Database 21c Express Edition Release 21.0.0.0.0 - Production
+* **MongoDB** 8.0.11 https://www.mongodb.com/try/download/community
+* **Couchbase** Community Edition 7.6.2 build 3721 https://www.couchbase.com/downloads/
 
 Se configuran desde el archivo `config.properties`.
 
@@ -28,6 +28,24 @@ Puedes utilizar servicios en la nube como:
 * **Couchbase Capella** https://www.couchbase.com/downloads/
 
 Solo debes reemplazar las URLs y credenciales en `config.properties` con los valores que te da la plataforma remota, ademas de crear una cuenta y añadir la IP de su maquina.
+
+### Opción 3: Uso de Doker
+
+Ejecutas la aplicación Java desde tu PC normalmente, se encontraran en la *"Rama-Docker"* loa archivos correspondientes.
+
+Los servicios de bases de datos corren como contenedores Docker en la misma máquina:
+
+* **MySQL** → localhost:3307 (o cualquier puerto que mapees)
+* **PostgreSQL** → localhost:5433
+* **MongoDB** → localhost:27018
+* **Oracle XE** → localhost:1522
+* **Couchbase** → localhost:8091
+
+**Debes tener:**
+
+* Docker instalado y corriendo
+* Un docker-compose.yml con los servicios definidos. (archivos realcionados en *"Rama-Docker"* )
+* Puertos correctamente mapeados a localhost (diferentes a los usados por instalaciones locales)
 
 ---
 
@@ -123,7 +141,7 @@ ia.api_key=OBD9F5L8RMdqsxg61W6MDKQs970CPYCH1cU44VeF (defecto, si se desea usar e
 ia.api_url=https://api.cohere.ai/v1/chat
 ```
 
-Puedes reemplazar las URLs locales por servicios en la nube (como PlanetScale, MongoDB Atlas o Capella) si prefieres evitar instalaciones locales o modificar los puertos.
+Puedes reemplazar las URLs locales por servicios en la nube (como PlanetScale, MongoDB Atlas o Capella) si prefieres evitar instalaciones locales o modificar los puertos. *recuerda que siempre tendras que añadir tu ip a este tipod e servicios o crearte una cuenta*
 
 ---
 
@@ -202,5 +220,7 @@ Para producción, se usara archivos `.env`, variables de entorno, o gestores de 
 
 Este proyecto se encuantra en una estapa inicial, actualizacion futuras del repositorio con lo aprendido en clases futuras.
 Proyeccion migracion a aplicacion web e uso de otras tecnologias
+
+*Se encontrar un documento mas detallado en la caprtea de `Docs` con una copia en PDF de la documentacion*
 
 ---
