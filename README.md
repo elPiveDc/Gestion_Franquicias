@@ -219,7 +219,8 @@ Para producción, se usara archivos `.env`, variables de entorno, o gestores de 
 ## Estado del Proyecto
 
 Este proyecto se encuantra en una estapa desarrollo. Actualizaciones futuras ligadas con lo aprendido.
-**Proyeccion:** Migracion a aplicacion web e uso de otras tecnologias.
+
+* **Proyeccion:** Migracion a aplicacion web e uso de otras tecnologias.
 
 *Se encontrar un documento mas detallado en la carpeta `Docs` con una copia en PDF de la documentación*
 
