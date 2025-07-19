@@ -141,7 +141,7 @@ ia.api_key=OBD9F5L8RMdqsxg61W6MDKQs970CPYCH1cU44VeF (defecto, si se desea usar e
 ia.api_url=https://api.cohere.ai/v1/chat
 ```
 
-Puedes reemplazar las URLs locales por servicios en la nube (como PlanetScale, MongoDB Atlas o Capella) si prefieres evitar instalaciones locales o modificar los puertos. *recuerda que siempre tendras que añadir tu ip a este tipod e servicios o crearte una cuenta*
+Puedes reemplazar las URLs locales por servicios en la nube (como PlanetScale, MongoDB Atlas o Capella) si prefieres evitar instalaciones locales o modificar los puertos. *Recuerda que siempre tendras que añadir tu ip a este tipod e servicios o crearte una cuenta con posibles cobros por el servicio*
 
 ---
 
@@ -218,9 +218,9 @@ Para producción, se usara archivos `.env`, variables de entorno, o gestores de 
 
 ## Estado del Proyecto
 
-Este proyecto se encuantra en una estapa inicial, actualizacion futuras del repositorio con lo aprendido en clases futuras.
-Proyeccion migracion a aplicacion web e uso de otras tecnologias
+Este proyecto se encuantra en una estapa desarrollo. Actualizaciones futuras ligadas con lo aprendido.
+**Proyeccion:** Migracion a aplicacion web e uso de otras tecnologias.
 
-*Se encontrar un documento mas detallado en la caprtea de `Docs` con una copia en PDF de la documentacion*
+*Se encontrar un documento mas detallado en la carpeta `Docs` con una copia en PDF de la documentación*
 
 ---
