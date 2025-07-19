@@ -221,7 +221,7 @@ public class PanelReportesMain extends JPanel {
             Image imagen = imagenUtil.obtenerImagenPorIdFranquicia(idfran);
             if (imagen != null) {
                 imagen.scaleToFit(100, 100); // tamaño máximo 100x100 px
-                imagen.setAlignment(Element.ALIGN_RIGHT);
+                imagen.setAlignment(Element.ALIGN_LEFT);
                 doc.add(imagen);
                 doc.add(Chunk.NEWLINE);
             }

@@ -9,7 +9,7 @@ import com.couchbase.client.java.ClusterOptions;
 
 public class ConexionCouchbaseCloud {
 
-    private static final String CONNECTION_STRING = "couchbases://cb.36cn6vqkwreh9rrc.cloud.couchbase.com";
+    private static final String CONNECTION_STRING = "couchbases://cb.c2h3tgujeua2ae65.cloud.couchbase.com";
     private static final String USERNAME = "Servicio_Franquicias";
     private static final String PASSWORD = "iaq!pQZ!2p5dCNh";
     private static final String BUCKET_NAME = "miBucket";

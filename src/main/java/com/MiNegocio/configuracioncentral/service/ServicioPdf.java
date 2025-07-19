@@ -1,6 +1,6 @@
 package com.MiNegocio.configuracioncentral.service;
 
-import com.MiNegocio.configuracioncentral.factory.ConexionNoSQL;
+import com.MiNegocio.configuracioncentral.factory.ConexionMongoDB;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
@@ -24,7 +24,7 @@ public class ServicioPdf {
     private final int idFran;
 
     public ServicioPdf(int idFran) {
-        this.mongoClient = ConexionNoSQL.getMongoConexion();
+        this.mongoClient = ConexionMongoDB.getMongoConexion();
         this.database = mongoClient.getDatabase("bdcentral");
         this.gridFSBucket = GridFSBuckets.create(database, "pdf_reportes");
         this.idFran = idFran;
@@ -62,6 +62,6 @@ public class ServicioPdf {
     }
 
     public void cerrar() {
-        ConexionNoSQL.cerrarConexion();
+        ConexionMongoDB.cerrarConexion();
     }
 }

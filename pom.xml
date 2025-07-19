@@ -5,14 +5,12 @@
     <artifactId>MiNegocio</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>com.MiNegocio.interfazgrafica.BusquedaFranquicia</exec.mainClass>
     </properties>
-    
     <dependencies>
         <!--  JDBC (SQLPlus / Oracle DB)  -->
         <dependency>
@@ -88,6 +86,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.13</version> <!-- o la más reciente -->
         </dependency>
+        
+        <dependency>
+            <groupId>com.datastax.astra</groupId>
+            <artifactId>astra-db-java</artifactId>
+            <version>2.0.0-PREVIEW1</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
@@ -100,11 +105,12 @@
             <version>5.5.13.4</version>
             <type>jar</type>
         </dependency>
-        
         <dependency>
             <groupId>com.couchbase.client</groupId>
             <artifactId>java-client</artifactId>
             <version>3.4.3</version>
         </dependency>
-       </dependencies>
+        
+        
+</dependencies>
 </project>

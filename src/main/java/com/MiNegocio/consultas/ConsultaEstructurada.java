@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class ConsultaEstructurada {
 
     public void consultar(BaseDatosFranquicia bd, ObjetoBDFranquicia objeto) throws Exception {
-        String[] opciones = {"Ver todos los datos", "Filtrar por una columna"};
+        String[] opciones = {"Ver todos los datos", "Filtrar por una columna", "JOIN (no disponible)"};
 
         int seleccion = JOptionPane.showOptionDialog(
                 null,
@@ -39,7 +39,6 @@ public class ConsultaEstructurada {
             switch (seleccion) {
                 case 0 -> ejecutarConsultaSimple(conn, objeto, bd);
                 case 1 -> ejecutarConsultaFiltrada(conn, objeto, bd);
-                case 2 -> JOptionPane.showMessageDialog(null, "JOIN aún no implementado como módulo independiente.");
                 default -> JOptionPane.showMessageDialog(null, "Opción inválida.");
             }
         }

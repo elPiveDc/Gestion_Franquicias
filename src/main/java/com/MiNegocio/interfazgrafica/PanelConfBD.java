@@ -6,6 +6,7 @@ import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosBD;
 import com.MiNegocio.configuracioncentral.integration.objetosbd.GestorObjetosFactory;
 import com.MiNegocio.configuracioncentral.repository.impl.*;
 import com.MiNegocio.configuracioncentral.utils.ValidacionTablaUsuariosService;
+import java.awt.Image;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -49,6 +52,7 @@ public class PanelConfBD extends javax.swing.JPanel {
         Scroloculto.setVisible(false);
         TablaOculta.setVisible(false);
         LabelOculto.setVisible(false);
+        setIconoRedimensionadoToggle(btnVer, "/ojo.png", 20, 20, 0);
     }
 
     public PanelConfBD(List<BaseDatosFranquicia> lista, int idFranquicia, String nomfran) {
@@ -58,13 +62,13 @@ public class PanelConfBD extends javax.swing.JPanel {
         this.idFranquicia = idFranquicia;
         initComponents();
         llenarTablaDesdeLista(lista, TablaOculta);
+        setIconoRedimensionadoToggle(btnVer, "/ojo.png", 20, 20, 0);
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -82,9 +86,16 @@ public class PanelConfBD extends javax.swing.JPanel {
         tablaBDs = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         LabelOculto = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        btnVer = new javax.swing.JToggleButton();
 
-        jLabel1.setFont(new java.awt.Font("Swis721 Lt BT", 0, 36)); // NOI18N
-        jLabel1.setText("Configurar Bases de Datos");
+        setBackground(new java.awt.Color(253, 253, 253));
+        setMaximumSize(new java.awt.Dimension(800, 550));
+        setMinimumSize(new java.awt.Dimension(800, 550));
+        setPreferredSize(new java.awt.Dimension(800, 550));
 
         jLabel2.setFont(new java.awt.Font("Swis721 Lt BT", 0, 18)); // NOI18N
         jLabel2.setText("Nombre BD:");
@@ -98,7 +109,9 @@ public class PanelConfBD extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("Swis721 Lt BT", 0, 18)); // NOI18N
         jLabel6.setText("Contraseña BD:");
 
-        btnFinalizar.setFont(new java.awt.Font("Swis721 Lt BT", 0, 18)); // NOI18N
+        btnFinalizar.setBackground(new java.awt.Color(47, 90, 156));
+        btnFinalizar.setFont(new java.awt.Font("Swis721 Lt BT", 1, 15)); // NOI18N
+        btnFinalizar.setForeground(new java.awt.Color(255, 255, 255));
         btnFinalizar.setText("Finalizar Creación");
         btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,25 +119,17 @@ public class PanelConfBD extends javax.swing.JPanel {
             }
         });
 
-        txtNombreBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        txtNombreBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 14)); // NOI18N
 
-        cbTipoBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        cbTipoBD.setBackground(new java.awt.Color(253, 253, 253));
+        cbTipoBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 14)); // NOI18N
         cbTipoBD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MYSQL", "POSTGRESQL", "ORACLE" }));
-        cbTipoBD.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cbTipoBDMouseClicked(evt);
-            }
-        });
-        cbTipoBD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbTipoBDActionPerformed(evt);
-            }
-        });
 
-        txtUsuarioBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        txtUsuarioBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 14)); // NOI18N
 
-        txtContraseñaBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        txtContraseñaBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 14)); // NOI18N
 
+        TablaOculta.setBackground(new java.awt.Color(253, 253, 253));
         TablaOculta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -143,15 +148,21 @@ public class PanelConfBD extends javax.swing.JPanel {
         });
         Scroloculto.setViewportView(TablaOculta);
 
-        btnAñadirBD.setText("Agregar Base");
+        btnAñadirBD.setBackground(new java.awt.Color(47, 90, 156));
+        btnAñadirBD.setFont(new java.awt.Font("Swis721 Lt BT", 1, 14)); // NOI18N
+        btnAñadirBD.setForeground(new java.awt.Color(255, 255, 255));
+        btnAñadirBD.setText("Agregar Base de Datos");
         btnAñadirBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAñadirBDActionPerformed(evt);
             }
         });
 
+        cbEstadoBD.setBackground(new java.awt.Color(253, 253, 253));
+        cbEstadoBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 14)); // NOI18N
         cbEstadoBD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CONFIGURADA", "NO_CONFIGURADA", "ERROR" }));
 
+        tablaBDs.setBackground(new java.awt.Color(253, 253, 253));
         tablaBDs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -176,86 +187,133 @@ public class PanelConfBD extends javax.swing.JPanel {
         LabelOculto.setFont(new java.awt.Font("Swis721 Lt BT", 0, 18)); // NOI18N
         LabelOculto.setText("Bases de Datos que ya Tienes:");
 
+        jPanel1.setBackground(new java.awt.Color(47, 90, 156));
+        jPanel1.setMaximumSize(new java.awt.Dimension(800, 100));
+        jPanel1.setMinimumSize(new java.awt.Dimension(800, 100));
+
+        jLabel1.setFont(new java.awt.Font("Swis721 Lt BT", 3, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Configurar Bases de Datos");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(182, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(179, 179, 179))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(27, 27, 27))
+        );
+
+        jLabel7.setFont(new java.awt.Font("Swis721 Lt BT", 0, 18)); // NOI18N
+        jLabel7.setText("Estado de la BD:");
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        btnVer.setBorderPainted(false);
+        btnVer.setContentAreaFilled(false);
+        btnVer.setFocusPainted(false);
+        btnVer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel4))
-                    .addComponent(jLabel6))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnAñadirBD, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbEstadoBD, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtNombreBD, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbTipoBD, javax.swing.GroupLayout.Alignment.LEADING, 0, 200, Short.MAX_VALUE)
-                    .addComponent(txtUsuarioBD, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtContraseñaBD, javax.swing.GroupLayout.Alignment.LEADING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Scroloculto, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(LabelOculto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnFinalizar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(21, 21, 21))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(205, 205, 205)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cbEstadoBD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNombreBD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbTipoBD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtUsuarioBD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtContraseñaBD, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnVer))
+                    .addComponent(btnAñadirBD, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(LabelOculto, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                            .addComponent(Scroloculto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(btnFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel1)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNombreBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbTipoBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUsuarioBD, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnVer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtContraseñaBD))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbEstadoBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAñadirBD, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator1)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtNombreBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(cbTipoBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(txtUsuarioBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(LabelOculto)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(txtContraseñaBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
-                        .addComponent(cbEstadoBD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Scroloculto, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFinalizar)
-                    .addComponent(btnAñadirBD, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(71, 71, 71))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Scroloculto, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnFinalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -304,13 +362,29 @@ public class PanelConfBD extends javax.swing.JPanel {
         agregarBaseDatos(txtNombreBD, cbTipoBD, txtUsuarioBD, txtContraseñaBD, cbEstadoBD, tablaBDs);
     }//GEN-LAST:event_btnAñadirBDActionPerformed
 
-    private void cbTipoBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTipoBDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbTipoBDActionPerformed
+    private void btnVerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerActionPerformed
+        if (btnVer.isSelected()) {
+            // Mostrar contraseña
+            txtContraseñaBD.setEchoChar((char) 0); // Sin ocultar caracteres
+            btnVer.setToolTipText("Ocultar contraseña");
+        } else {
+            // Ocultar contraseña
+            txtContraseñaBD.setEchoChar('•'); // Usar un símbolo de punto o asterisco
+            btnVer.setToolTipText("Mostrar contraseña");
+        }
+    }//GEN-LAST:event_btnVerActionPerformed
 
-    private void cbTipoBDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbTipoBDMouseClicked
-        //que extraiga mensajito jsdffjsyf
-    }//GEN-LAST:event_cbTipoBDMouseClicked
+    public void setIconoRedimensionadoToggle(javax.swing.JToggleButton boton, String rutaImagen, int ancho, int alto, int gapTexto) {
+        try {
+            ImageIcon iconoOriginal = new ImageIcon(getClass().getResource(rutaImagen));
+            Image imagen = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagen));
+            boton.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+            boton.setIconTextGap(gapTexto);
+        } catch (NullPointerException e) {
+            System.err.println("No se encontró la imagen: " + rutaImagen);
+        }
+    }
 
     public void llenarTablaDesdeLista(List<BaseDatosFranquicia> listaBDs, JTable tablaBDs) {
         try {
@@ -594,6 +668,7 @@ public class PanelConfBD extends javax.swing.JPanel {
     private javax.swing.JTable TablaOculta;
     private javax.swing.JButton btnAñadirBD;
     private javax.swing.JButton btnFinalizar;
+    private javax.swing.JToggleButton btnVer;
     private javax.swing.JComboBox<String> cbEstadoBD;
     private javax.swing.JComboBox<String> cbTipoBD;
     private javax.swing.JLabel jLabel1;
@@ -602,7 +677,10 @@ public class PanelConfBD extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tablaBDs;
     private javax.swing.JPasswordField txtContraseñaBD;
     private javax.swing.JTextField txtNombreBD;

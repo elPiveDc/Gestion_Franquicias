@@ -2,7 +2,7 @@ package com.MiNegocio.configuracioncentral.repository.impl;
 
 import com.MiNegocio.configuracioncentral.domain.ObjetoBDFranquicia;
 import com.MiNegocio.configuracioncentral.factory.ConexionBDFactory;
-import com.MiNegocio.configuracioncentral.factory.ConexionNoSQL;
+import com.MiNegocio.configuracioncentral.factory.ConexionMongoDB;
 import com.MiNegocio.configuracioncentral.repository.ObjetoBDRepository;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -42,7 +42,7 @@ public class ObjetoBDRepositoryImpl implements ObjetoBDRepository {
     @Override
     public void guardarObjetoEnMongo(ObjetoBDFranquicia objeto) {
         try {
-            MongoClient mongoClient = ConexionNoSQL.getMongoConexion();
+            MongoClient mongoClient = ConexionMongoDB.getMongoConexion();
 
             MongoDatabase db = mongoClient.getDatabase("bdcentral");
             MongoCollection<Document> coleccion = db.getCollection("objetos_bd_franquicia");

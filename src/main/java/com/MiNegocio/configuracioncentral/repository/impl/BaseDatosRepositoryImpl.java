@@ -36,7 +36,8 @@ public class BaseDatosRepositoryImpl implements BaseDatosRepository {
         String sql = "INSERT INTO bases_datos_franquicia(nombre_bd, tipo_bd, estado, url_conexion, usuario_conexion, pass_conexion_hash, id_franquicia) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexionBDFactory.getConexion(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConexionBDFactory.getConexion(); 
+                PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, bd.getNombreBD());
             ps.setString(2, bd.getTipo().name());

@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class VentanaPrincipalAdmin extends javax.swing.JFrame {
 
@@ -46,17 +47,19 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         decorarBoton(btnConsultas);
         decorarBoton(btnMasBD);
         decorarBoton(btnReportes);
+        decorarBoton(btnCerrarSesion);
         setIconoBoton(btnMain, "/main.png", 30, 30);
         setIconoBoton(btnCrearTablas, "/crear.png", 30, 30);
         setIconoBoton(btnConsultas, "/conf.png", 30, 30);
         setIconoBoton(btnMasBD, "/tabla-removebg-preview.png", 30, 30);
         setIconoBoton(btnReportes, "/reporte.png", 30, 30);
+        setIconoBoton(btnCerrarSesion, "/cerrar.png", 30, 30);
 
         cardLayout = (CardLayout) panelContenedor.getLayout();
 
         panelContenedor.add(new PanelSesion(this), "sesion");
         panelContenedor.add(new PanelMain(), "main");
-        
+
         cardLayout.show(panelContenedor, "sesion");
         jPanel1.setVisible(false);
     }
@@ -80,7 +83,6 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
             Logger.getLogger(VentanaPrincipalAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -92,6 +94,7 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnConsultas = new javax.swing.JButton();
         btnMasBD = new javax.swing.JButton();
         btnMain = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
         panelContenedor = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -103,12 +106,14 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnReportes.setBackground(new java.awt.Color(32, 66, 118));
         btnReportes.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnReportes.setForeground(new java.awt.Color(255, 255, 255));
-        btnReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cerrar.png"))); // NOI18N
         btnReportes.setText("Reportes");
         btnReportes.setBorderPainted(false);
         btnReportes.setFocusPainted(false);
         btnReportes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnReportes.setMaximumSize(new java.awt.Dimension(89, 30));
+        btnReportes.setMinimumSize(new java.awt.Dimension(89, 30));
         btnReportes.setOpaque(true);
+        btnReportes.setPreferredSize(new java.awt.Dimension(89, 30));
         btnReportes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReportesActionPerformed(evt);
@@ -118,12 +123,14 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnCrearTablas.setBackground(new java.awt.Color(32, 66, 118));
         btnCrearTablas.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnCrearTablas.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrearTablas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/crear.png"))); // NOI18N
         btnCrearTablas.setText(" Crear Tablas");
         btnCrearTablas.setBorderPainted(false);
         btnCrearTablas.setFocusPainted(false);
         btnCrearTablas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnCrearTablas.setMaximumSize(new java.awt.Dimension(89, 30));
+        btnCrearTablas.setMinimumSize(new java.awt.Dimension(89, 30));
         btnCrearTablas.setOpaque(true);
+        btnCrearTablas.setPreferredSize(new java.awt.Dimension(89, 30));
         btnCrearTablas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCrearTablasActionPerformed(evt);
@@ -133,12 +140,14 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnConsultas.setBackground(new java.awt.Color(32, 66, 118));
         btnConsultas.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnConsultas.setForeground(new java.awt.Color(255, 255, 255));
-        btnConsultas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/conf.png"))); // NOI18N
-        btnConsultas.setText("<html>Carga de Datos<br>y <br>Consultas</html> ");
+        btnConsultas.setText("<html>Carga de Datos<br>y Consultas</html> ");
         btnConsultas.setBorderPainted(false);
         btnConsultas.setFocusPainted(false);
         btnConsultas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnConsultas.setMaximumSize(new java.awt.Dimension(89, 30));
+        btnConsultas.setMinimumSize(new java.awt.Dimension(89, 30));
         btnConsultas.setOpaque(true);
+        btnConsultas.setPreferredSize(new java.awt.Dimension(89, 30));
         btnConsultas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnConsultasActionPerformed(evt);
@@ -148,12 +157,14 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnMasBD.setBackground(new java.awt.Color(32, 66, 118));
         btnMasBD.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnMasBD.setForeground(new java.awt.Color(255, 255, 255));
-        btnMasBD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabla-removebg-preview.png"))); // NOI18N
         btnMasBD.setText("Objetos");
         btnMasBD.setBorderPainted(false);
         btnMasBD.setFocusPainted(false);
         btnMasBD.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnMasBD.setMaximumSize(new java.awt.Dimension(89, 30));
+        btnMasBD.setMinimumSize(new java.awt.Dimension(89, 30));
         btnMasBD.setOpaque(true);
+        btnMasBD.setPreferredSize(new java.awt.Dimension(89, 30));
         btnMasBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMasBDActionPerformed(evt);
@@ -163,15 +174,31 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         btnMain.setBackground(new java.awt.Color(32, 66, 118));
         btnMain.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
         btnMain.setForeground(new java.awt.Color(255, 255, 255));
-        btnMain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main.png"))); // NOI18N
         btnMain.setText("Principal");
         btnMain.setBorderPainted(false);
         btnMain.setFocusPainted(false);
         btnMain.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnMain.setMaximumSize(new java.awt.Dimension(89, 30));
+        btnMain.setMinimumSize(new java.awt.Dimension(89, 30));
         btnMain.setOpaque(true);
+        btnMain.setPreferredSize(new java.awt.Dimension(89, 30));
         btnMain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMainActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setBackground(new java.awt.Color(32, 66, 118));
+        btnCerrarSesion.setFont(new java.awt.Font("Swis721 Lt BT", 0, 16)); // NOI18N
+        btnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.setBorderPainted(false);
+        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnCerrarSesion.setOpaque(true);
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
             }
         });
 
@@ -184,24 +211,27 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
                     .addComponent(btnReportes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnMasBD, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnConsultas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnMain, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnCrearTablas, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnCrearTablas, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(76, 76, 76)
+                .addGap(88, 88, 88)
                 .addComponent(btnMain, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addComponent(btnCrearTablas, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(btnConsultas, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(btnMasBD, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnReportes, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
@@ -244,6 +274,10 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         panelContenedor.add(new PanelReportesMain(objetoRepo, bdRepo, bv.getId_franquicia(), NombreFran, correo), "Reporte");
         cardLayout.show(panelContenedor, "Reporte");
     }//GEN-LAST:event_btnReportesActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void decorarBoton(javax.swing.JButton boton) {
         java.awt.Color colorNormal = new java.awt.Color(32, 66, 118);
@@ -299,8 +333,21 @@ public class VentanaPrincipalAdmin extends javax.swing.JFrame {
         }
     }
 
+    public void mostrarPanelObjetos() {
+        panelContenedor.add(new PanelConfBD(bdRepo.obtenerPorFranquicia(bv.getId_franquicia()), bv.getId_franquicia(), NombreFran), "objetos");
+        cardLayout.show(panelContenedor, "objetos");
+    }
 
+    public JPanel getPanelContenedor() {
+        return panelContenedor;
+    }
+
+    public CardLayout getCardLayout() {
+        return cardLayout;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnConsultas;
     private javax.swing.JButton btnCrearTablas;
     private javax.swing.JButton btnMain;
