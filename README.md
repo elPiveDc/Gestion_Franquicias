@@ -47,6 +47,14 @@ Los servicios de bases de datos corren como contenedores Docker en la misma máq
 * Un docker-compose.yml con los servicios definidos. (archivos realcionados en *"Rama-Docker"* )
 * Puertos correctamente mapeados a localhost (diferentes a los usados por instalaciones locales)
 
+* **Desde la carpeta del proyecto, ejecuta:**
+
+```bash
+
+docker-compose up -d
+
+```
+
 ---
 
 ## Descripción general
