@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0.42
+    container_name: mysql_franquicias
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sistema_franquicias
+    volumes:
+      - ./init/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - franquicias-net
+
+  postgres:
+    image: postgres:17
+    container_name: postgres_franquicias
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "PASSWORD"
+      POSTGRES_USER: postgres
+    networks:
+      - franquicias-net
+
+  oracle:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle_franquicias
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: PASSWORD
+      APP_USER: sys
+    networks:
+      - franquicias-net
+
+  mongo:
+    image: mongo:7
+    container_name: mongo_franquicias
+    ports:
+      - "27017:27017"
+    networks:
+      - franquicias-net
+
+  couchbase:
+    image: couchbase:community
+    container_name: couchbase_franquicias
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210:11210"
+    networks:
+      - franquicias-net
+    volumes:
+      - couchbase_data:/opt/couchbase/var
+      - ./init/couchbase:/docker-entrypoint-initdb.d
+    environment:
+      COUCHBASE_ADMINISTRATOR_USERNAME: Servico_Franquicias
+      COUCHBASE_ADMINISTRATOR_PASSWORD: iaq!pQZ!2p5dCNh
+
+volumes:
+  couchbase_data:
+
+networks:
+  franquicias-net:
+    driver: bridge
