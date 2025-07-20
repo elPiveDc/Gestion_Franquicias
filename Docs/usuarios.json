@@ -1,0 +1,14 @@
+[
+  {
+    "id_usuario": 3,
+    "nombre_usuario": "admin",
+    "password_hash": "123456hash",
+    "es_admin": 1
+  },
+  {
+    "id_usuario": 4,
+    "nombre_usuario": "juan",
+    "password_hash": "hashjuan",
+    "es_admin": 0
+  }
+]
